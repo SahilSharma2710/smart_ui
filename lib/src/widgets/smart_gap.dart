@@ -139,7 +139,7 @@ class SmartGap extends StatelessWidget {
   }
 
   double _resolveValue(BuildContext context, SmartUiData config) {
-    if (_value != null) return _value!;
+    if (_value != null) return _value;
 
     if (_responsiveValue != null) {
       final width = MediaQuery.sizeOf(context).width;

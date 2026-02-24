@@ -169,24 +169,24 @@ class SmartPadding extends StatelessWidget {
 
     // Token-based all
     if (_size != null) {
-      return EdgeInsets.all(tokens.fromSize(_size!));
+      return EdgeInsets.all(tokens.fromSize(_size));
     }
 
     // Token-based symmetric
     if (_horizontal != null || _vertical != null) {
       return EdgeInsets.symmetric(
-        horizontal: _horizontal != null ? tokens.fromSize(_horizontal!) : 0,
-        vertical: _vertical != null ? tokens.fromSize(_vertical!) : 0,
+        horizontal: _horizontal != null ? tokens.fromSize(_horizontal) : 0,
+        vertical: _vertical != null ? tokens.fromSize(_vertical) : 0,
       );
     }
 
     // Token-based only
     if (_left != null || _top != null || _right != null || _bottom != null) {
       return EdgeInsets.only(
-        left: _left != null ? tokens.fromSize(_left!) : 0,
-        top: _top != null ? tokens.fromSize(_top!) : 0,
-        right: _right != null ? tokens.fromSize(_right!) : 0,
-        bottom: _bottom != null ? tokens.fromSize(_bottom!) : 0,
+        left: _left != null ? tokens.fromSize(_left) : 0,
+        top: _top != null ? tokens.fromSize(_top) : 0,
+        right: _right != null ? tokens.fromSize(_right) : 0,
+        bottom: _bottom != null ? tokens.fromSize(_bottom) : 0,
       );
     }
 

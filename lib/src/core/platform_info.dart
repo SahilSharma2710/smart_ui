@@ -4,9 +4,8 @@
 /// building platform-adaptive Flutter applications.
 library;
 
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 
 /// Represents the different platforms supported by Flutter.
 ///
@@ -62,7 +61,8 @@ enum SmartPlatform {
 /// Provides information about the current platform.
 ///
 /// This class offers static methods for detecting the platform
-/// and its characteristics.
+/// and its characteristics. Uses [defaultTargetPlatform] for
+/// cross-platform compatibility including web.
 ///
 /// Example:
 /// ```dart
@@ -78,32 +78,39 @@ abstract final class SmartPlatformInfo {
   /// Returns the current [SmartPlatform].
   static SmartPlatform get current {
     if (kIsWeb) return SmartPlatform.web;
-    if (Platform.isAndroid) return SmartPlatform.android;
-    if (Platform.isIOS) return SmartPlatform.ios;
-    if (Platform.isMacOS) return SmartPlatform.macos;
-    if (Platform.isWindows) return SmartPlatform.windows;
-    if (Platform.isLinux) return SmartPlatform.linux;
-    if (Platform.isFuchsia) return SmartPlatform.fuchsia;
-    return SmartPlatform.unknown;
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.android => SmartPlatform.android,
+      TargetPlatform.iOS => SmartPlatform.ios,
+      TargetPlatform.macOS => SmartPlatform.macos,
+      TargetPlatform.windows => SmartPlatform.windows,
+      TargetPlatform.linux => SmartPlatform.linux,
+      TargetPlatform.fuchsia => SmartPlatform.fuchsia,
+    };
   }
 
   /// Returns `true` if running on Android.
-  static bool get isAndroid => !kIsWeb && Platform.isAndroid;
+  static bool get isAndroid =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   /// Returns `true` if running on iOS.
-  static bool get isIOS => !kIsWeb && Platform.isIOS;
+  static bool get isIOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   /// Returns `true` if running on macOS.
-  static bool get isMacOS => !kIsWeb && Platform.isMacOS;
+  static bool get isMacOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
 
   /// Returns `true` if running on Windows.
-  static bool get isWindows => !kIsWeb && Platform.isWindows;
+  static bool get isWindows =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
   /// Returns `true` if running on Linux.
-  static bool get isLinux => !kIsWeb && Platform.isLinux;
+  static bool get isLinux =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.linux;
 
   /// Returns `true` if running on Fuchsia.
-  static bool get isFuchsia => !kIsWeb && Platform.isFuchsia;
+  static bool get isFuchsia =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.fuchsia;
 
   /// Returns `true` if running on the web.
   static bool get isWeb => kIsWeb;

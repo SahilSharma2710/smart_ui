@@ -196,7 +196,7 @@ class SmartContainer extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     final breakpoint = config.breakpoints.breakpointForWidth(width);
 
-    final r = _responsiveMaxWidth!;
+    final r = _responsiveMaxWidth;
     final resolved = switch (breakpoint) {
       SmartBreakpoint.tv =>
         r.tv ?? r.desktop ?? r.tablet ?? r.mobile ?? r.watch,
