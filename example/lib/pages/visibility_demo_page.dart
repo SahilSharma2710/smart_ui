@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class VisibilityDemoPage extends StatelessWidget {
   const VisibilityDemoPage({super.key});
@@ -17,15 +19,15 @@ class VisibilityDemoPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildSmartVisibleDemo(context),
+            StaggeredFadeIn(index: 1, child: _buildSmartVisibleDemo(context)),
             const VGap.xl(),
-            _buildShortcutWidgetsDemo(context),
+            StaggeredFadeIn(index: 2, child: _buildShortcutWidgetsDemo(context)),
             const VGap.xl(),
-            _buildConditionalDemo(context),
+            StaggeredFadeIn(index: 3, child: _buildConditionalDemo(context)),
             const VGap.xl(),
-            _buildReplacementDemo(context),
+            StaggeredFadeIn(index: 4, child: _buildReplacementDemo(context)),
           ],
         ),
       ),
@@ -33,43 +35,13 @@ class VisibilityDemoPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SmartText(
-          'Responsive Visibility',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
+    return PremiumPageHeader(
+      icon: Icons.visibility_rounded,
+      title: 'Responsive Visibility',
+      subtitle:
           'Show or hide widgets based on the current breakpoint. '
           'Resize your window to see widgets appear and disappear.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        const VGap.md(),
-        ResponsiveBuilder(
-          builder: (context, info) {
-            return Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: SmartSpacing.md,
-                vertical: SmartSpacing.sm,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: SmartRadius.md,
-              ),
-              child: Text(
-                'Current: ${info.breakpoint.name.toUpperCase()}',
-                style: SmartTypography.labelMedium.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          },
-        ),
-      ],
+      trailing: const BreakpointIndicator(),
     );
   }
 

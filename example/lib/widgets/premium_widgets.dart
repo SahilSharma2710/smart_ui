@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
 import '../theme/premium_theme.dart';
 
@@ -597,6 +598,18 @@ class PremiumCodeBlock extends StatelessWidget {
   final String code;
   final String language;
 
+  void _copyToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: code));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Copied to clipboard!'),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: PremiumColors.success,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -632,10 +645,16 @@ class PremiumCodeBlock extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Icon(
-                Icons.copy,
-                size: 16,
-                color: PremiumColors.textMuted,
+              GestureDetector(
+                onTap: () => _copyToClipboard(context),
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Icon(
+                    Icons.copy,
+                    size: 16,
+                    color: PremiumColors.textMuted,
+                  ),
+                ),
               ),
             ],
           ),

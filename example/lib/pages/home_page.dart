@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../main.dart';
 import '../theme/premium_theme.dart';
 import '../widgets/premium_widgets.dart';
 
@@ -108,22 +110,39 @@ class HomePage extends StatelessWidget {
           ),
         ),
         const VGap.xl(),
-        Wrap(
-          spacing: SmartSpacing.md,
-          runSpacing: SmartSpacing.md,
-          children: [
-            _HeroButton(
-              label: 'Get Started',
-              icon: Icons.rocket_launch_rounded,
-              isPrimary: true,
-              onTap: () {},
-            ),
-            _HeroButton(
-              label: 'View on pub.dev',
-              icon: Icons.open_in_new_rounded,
-              onTap: () {},
-            ),
-          ],
+        Builder(
+          builder: (context) {
+            return Wrap(
+              spacing: SmartSpacing.md,
+              runSpacing: SmartSpacing.md,
+              children: [
+                _HeroButton(
+                  label: 'Get Started',
+                  icon: Icons.rocket_launch_rounded,
+                  isPrimary: true,
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Check the sidebar to explore features!'),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: PremiumColors.primary,
+                      ),
+                    );
+                  },
+                ),
+                _HeroButton(
+                  label: 'View on pub.dev',
+                  icon: Icons.open_in_new_rounded,
+                  onTap: () async {
+                    final uri = Uri.parse('https://pub.dev/packages/adaptive_kit');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -195,30 +214,35 @@ class HomePage extends StatelessWidget {
         description:
             'Five-tier system from watch to TV with automatic detection',
         gradient: [PremiumColors.info, PremiumColors.info.withAlpha(179)],
+        navIndex: 1,
       ),
       _Feature(
         icon: Icons.view_quilt_rounded,
         title: 'Smart Layouts',
         description: 'Declarative layout switching per breakpoint',
         gradient: [PremiumColors.success, PremiumColors.success.withAlpha(179)],
+        navIndex: 2,
       ),
       _Feature(
         icon: Icons.grid_view_rounded,
         title: 'Responsive Grid',
         description: 'Flexible 12-column grid with breakpoint-aware spans',
         gradient: [PremiumColors.warning, PremiumColors.warning.withAlpha(179)],
+        navIndex: 3,
       ),
       _Feature(
         icon: Icons.auto_awesome_rounded,
         title: 'Adaptive Widgets',
         description: 'Platform-aware components that feel native everywhere',
         gradient: [PremiumColors.primary, PremiumColors.gradientEnd],
+        navIndex: 4,
       ),
       _Feature(
         icon: Icons.palette_rounded,
         title: 'Design Tokens',
         description: 'Typography, spacing, and radius scales built-in',
         gradient: [PremiumColors.error, PremiumColors.error.withAlpha(179)],
+        navIndex: 5,
       ),
       _Feature(
         icon: Icons.visibility_rounded,
@@ -228,6 +252,7 @@ class HomePage extends StatelessWidget {
           PremiumColors.gradientStart,
           PremiumColors.gradientStart.withAlpha(179)
         ],
+        navIndex: 6,
       ),
     ];
 
@@ -384,12 +409,14 @@ class _Feature {
     required this.title,
     required this.description,
     required this.gradient,
+    required this.navIndex,
   });
 
   final IconData icon;
   final String title;
   final String description;
   final List<Color> gradient;
+  final int navIndex;
 }
 
 class _FeatureCard extends StatefulWidget {
@@ -405,43 +432,51 @@ class _FeatureCard extends StatefulWidget {
 class _FeatureCardState extends State<_FeatureCard> {
   bool _isHovered = false;
 
+  void _navigateToFeature() {
+    selectedNavIndex.value = widget.feature.navIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        transform: Matrix4.identity()..translate(0.0, _isHovered ? -4.0 : 0.0),
-        child: PremiumCard(
-          padding: const EdgeInsets.all(SmartSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: widget.feature.gradient),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: widget.feature.gradient.first.withAlpha(77),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: _navigateToFeature,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          transform: Matrix4.identity()..translate(0.0, _isHovered ? -4.0 : 0.0),
+          child: PremiumCard(
+            padding: const EdgeInsets.all(SmartSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: widget.feature.gradient),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: widget.feature.gradient.first.withAlpha(77),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child:
+                      Icon(widget.feature.icon, color: Colors.white, size: 24),
                 ),
-                child:
-                    Icon(widget.feature.icon, color: Colors.white, size: 24),
-              ),
-              const VGap.lg(),
-              Text(widget.feature.title, style: PremiumTypography.titleMedium),
-              const VGap.sm(),
-              Text(
-                widget.feature.description,
-                style: PremiumTypography.bodySmall,
-              ),
-            ],
+                const VGap.lg(),
+                Text(widget.feature.title, style: PremiumTypography.titleMedium),
+                const VGap.sm(),
+                Text(
+                  widget.feature.description,
+                  style: PremiumTypography.bodySmall,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -13,6 +13,9 @@ import 'pages/tokens_demo_page.dart';
 import 'pages/visibility_demo_page.dart';
 import 'pages/extensions_demo_page.dart';
 
+/// Global ValueNotifier for navigation index
+final selectedNavIndex = ValueNotifier<int>(0);
+
 void main() {
   runApp(const AdaptiveKitDemoApp());
 }
@@ -44,6 +47,24 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedNavIndex.addListener(_onGlobalNavChange);
+  }
+
+  @override
+  void dispose() {
+    selectedNavIndex.removeListener(_onGlobalNavChange);
+    super.dispose();
+  }
+
+  void _onGlobalNavChange() {
+    if (selectedNavIndex.value != _selectedIndex) {
+      setState(() => _selectedIndex = selectedNavIndex.value);
+    }
+  }
 
   static const _navItems = [
     _NavItem(Icons.home_rounded, Icons.home_outlined, 'Home'),
@@ -125,7 +146,7 @@ class _MainNavigationState extends State<MainNavigation> {
         ),
         actions: [
           PremiumChip(
-            label: 'v1.0.3',
+            label: 'v1.1.3',
             color: PremiumColors.gold,
             icon: Icons.verified_rounded,
           ),
@@ -206,7 +227,7 @@ class _MainNavigationState extends State<MainNavigation> {
               _DrawerLink(
                 icon: Icons.code_rounded,
                 label: 'GitHub',
-                onTap: () => _launchUrl('https://github.com/example/adaptive_kit'),
+                onTap: () => _launchUrl('https://github.com/SahilSharma2710/smart_ui'),
               ),
             ],
           ),
