@@ -1,10 +1,24 @@
-# adaptive_kit
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SahilSharma2710/smart_ui/main/assets/banner.svg" width="100%" alt="adaptive_kit banner">
+</p>
 
-[![pub package](https://img.shields.io/pub/v/adaptive_kit.svg)](https://pub.dev/packages/adaptive_kit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
+<p align="center">
+  <a href="https://pub.dev/packages/adaptive_kit"><img src="https://img.shields.io/pub/v/adaptive_kit.svg?style=for-the-badge&color=6366F1" alt="pub package"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License: MIT"></a>
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.10+-02569B.svg?style=for-the-badge&logo=flutter" alt="Flutter"></a>
+  <a href="https://pub.dev/packages/adaptive_kit/score"><img src="https://img.shields.io/pub/points/adaptive_kit?style=for-the-badge&color=34D399&label=pub%20points" alt="pub points"></a>
+</p>
 
-**The Tailwind CSS of Flutter.** Zero-config adaptive UI toolkit with responsive breakpoints, platform-aware widgets, design tokens, and powerful extensions.
+<p align="center">
+  <b>The Tailwind CSS of Flutter.</b><br/>
+  Zero-config adaptive UI toolkit with responsive breakpoints, platform-aware widgets, design tokens, and powerful extensions.
+</p>
+
+<p align="center">
+  <a href="https://sahilsharma2710.github.io/smart_ui/">🌐 Live Demo</a> · 
+  <a href="https://pub.dev/packages/adaptive_kit">📦 pub.dev</a> · 
+  <a href="https://github.com/SahilSharma2710/smart_ui">⭐ GitHub</a>
+</p>
 
 ---
 
@@ -51,6 +65,10 @@ SmartPadding.all(SpacingSize.md, child: ...)
 ```
 
 ---
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SahilSharma2710/smart_ui/main/assets/features.svg" width="100%" alt="adaptive_kit features">
+</p>
 
 ## Features
 
@@ -499,10 +517,15 @@ myWidget.scrollable()
 
 ---
 
-## Dashboard Preview
+## 🌐 Dashboard Preview
 
-🌐 **[Live Demo →](https://sahilsharma2710.github.io/smart_ui/)**
-The example app includes an interactive playground to test all features:
+<p align="center">
+  <a href="https://sahilsharma2710.github.io/smart_ui/">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-Try_it_Now-6366F1?style=for-the-badge&labelColor=0D1117" alt="Live Demo">
+  </a>
+</p>
+
+The example app is a premium interactive playground with 8 demo pages:
 
 ```bash
 cd example
