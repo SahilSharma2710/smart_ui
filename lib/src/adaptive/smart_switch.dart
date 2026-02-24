@@ -84,6 +84,7 @@ class SmartSwitch extends StatelessWidget {
     return Switch(
       value: value,
       onChanged: onChanged,
+      // ignore: deprecated_member_use
       activeColor: activeColor,
       inactiveTrackColor: inactiveTrackColor,
       thumbColor:
@@ -264,8 +265,10 @@ class SmartRadio<T> extends StatelessWidget {
 
     return Radio<T>(
       value: value,
+      // ignore: deprecated_member_use
       groupValue: groupValue,
       onChanged: onChanged,
+      // ignore: deprecated_member_use
       activeColor: activeColor,
     );
   }
