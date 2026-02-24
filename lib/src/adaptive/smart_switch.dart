@@ -267,6 +267,7 @@ class SmartRadio<T> extends StatelessWidget {
       value: value,
       // ignore: deprecated_member_use
       groupValue: groupValue,
+      // ignore: deprecated_member_use
       onChanged: onChanged,
       // ignore: deprecated_member_use
       activeColor: activeColor,
