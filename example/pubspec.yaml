@@ -1,16 +1,16 @@
-name: smartui_example
-description: Example app demonstrating smartui package features.
+name: adaptive_kit_example
+description: Example app demonstrating adaptive_kit package features.
 version: 1.0.0
 publish_to: 'none'
 
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.7.0
   flutter: ">=3.10.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  smartui:
+  adaptive_kit:
     path: ../
 
 dev_dependencies:
