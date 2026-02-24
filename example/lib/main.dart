@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_ui/smart_ui.dart';
+import 'package:smartui/smartui.dart';
 
 void main() {
   runApp(const SmartUiExampleApp());
@@ -12,7 +12,7 @@ class SmartUiExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SmartUi(
       child: MaterialApp(
-        title: 'smart_ui Example',
+        title: 'smartui Example',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
       appBar: AppBar(
-        title: const Text('smart_ui Demo'),
+        title: const Text('smartui Demo'),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   void _showInfoDialog(BuildContext context) {
     showSmartDialog<void>(
       context: context,
-      title: 'smart_ui',
+      title: 'smartui',
       content: 'The Tailwind CSS of Flutter. A zero-config, declarative '
           'adaptive UI toolkit for responsive, platform-aware Flutter apps.',
       actions: [

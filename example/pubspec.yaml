@@ -1,5 +1,5 @@
-name: smart_ui_example
-description: Example app demonstrating smart_ui package features.
+name: smartui_example
+description: Example app demonstrating smartui package features.
 version: 1.0.0
 publish_to: 'none'
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  smart_ui:
+  smartui:
     path: ../
 
 dev_dependencies:

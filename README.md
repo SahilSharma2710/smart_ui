@@ -1,11 +1,11 @@
-# smart_ui
+# smartui
 
-[![pub package](https://img.shields.io/pub/v/smart_ui.svg)](https://pub.dev/packages/smart_ui)
+[![pub package](https://img.shields.io/pub/v/smartui.svg)](https://pub.dev/packages/smartui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 **The Tailwind CSS of Flutter** - A zero-config, declarative adaptive UI toolkit for responsive, platform-aware Flutter apps.
 
-## Why smart_ui?
+## Why smartui?
 
 Building responsive & adaptive UIs in Flutter is painful:
 - MediaQuery boilerplate everywhere for breakpoints
@@ -13,7 +13,7 @@ Building responsive & adaptive UIs in Flutter is painful:
 - Platform-adaptive widgets require manual if/else (Material vs Cupertino)
 - No design token system for consistent spacing/typography
 
-**smart_ui solves all of this in one package.**
+**smartui solves all of this in one package.**
 
 ### Before vs After
 
@@ -38,7 +38,7 @@ Widget build(BuildContext context) {
 Padding(padding: EdgeInsets.all(16.0), ...)  // magic numbers
 ```
 
-**After (with smart_ui):**
+**After (with smartui):**
 ```dart
 // Responsive values - declarative!
 final columns = context.responsive<int>(
@@ -71,13 +71,13 @@ SmartPadding.all(SpacingSize.md, child: ...)
 
 ```yaml
 dependencies:
-  smart_ui: ^0.1.0
+  smartui: ^0.1.0
 ```
 
 ### 2. Wrap Your App (Optional)
 
 ```dart
-import 'package:smart_ui/smart_ui.dart';
+import 'package:smartui/smartui.dart';
 
 void main() {
   runApp(
@@ -511,7 +511,7 @@ myWidget.scrollable()
 
 ## Comparison
 
-| Feature | smart_ui | sizer | flutter_screenutil | responsive_framework |
+| Feature | smartui | sizer | flutter_screenutil | responsive_framework |
 |---------|----------|-------|-------------------|---------------------|
 | Breakpoint system | Yes | No | No | Yes |
 | Responsive values | Yes | No | No | Limited |

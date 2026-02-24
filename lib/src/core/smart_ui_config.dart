@@ -1,7 +1,7 @@
-/// Global configuration for smart_ui.
+/// Global configuration for smartui.
 ///
 /// This module provides the configuration system for customizing
-/// breakpoints, tokens, and other smart_ui settings.
+/// breakpoints, tokens, and other smartui settings.
 library;
 
 import 'package:flutter/widgets.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/widgets.dart';
 import '../tokens/spacing.dart';
 import 'breakpoints.dart';
 
-/// Global configuration widget for smart_ui.
+/// Global configuration widget for smartui.
 ///
 /// Wrap your app with [SmartUi] to provide custom configuration
 /// for breakpoints, tokens, and other settings.
@@ -103,7 +103,7 @@ class SmartUi extends InheritedWidget {
       designSize != oldWidget.designSize;
 }
 
-/// Data class containing smart_ui configuration.
+/// Data class containing smartui configuration.
 ///
 /// This is returned by [SmartUi.of] and contains all the
 /// configuration values from the nearest [SmartUi] ancestor.

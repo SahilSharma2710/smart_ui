@@ -1,4 +1,4 @@
-# smart_ui — Product Requirements Document
+# smartui — Product Requirements Document
 
 ## Vision
 The "Tailwind CSS" of Flutter. A zero-config, declarative adaptive UI toolkit that makes responsive, platform-aware Flutter apps effortless.
@@ -27,13 +27,13 @@ Building responsive & adaptive UIs in Flutter is painful:
 
 ## Package Structure (Monorepo)
 ```
-smart_ui/                    # Main package
+smartui/                    # Main package
 ├── lib/
-│   ├── smart_ui.dart        # Barrel export
+│   ├── smartui.dart        # Barrel export
 │   ├── src/
 │   │   ├── core/
 │   │   │   ├── breakpoints.dart       # Breakpoint definitions & detection
-│   │   │   ├── smart_ui_config.dart   # Global configuration
+│   │   │   ├── smartui_config.dart   # Global configuration
 │   │   │   └── platform_info.dart     # Platform detection utilities
 │   │   ├── responsive/
 │   │   │   ├── responsive_value.dart  # context.responsive() extension
@@ -65,7 +65,7 @@ smart_ui/                    # Main package
 │   │       ├── context_extensions.dart   # BuildContext extensions
 │   │       ├── widget_extensions.dart    # Widget extensions (.responsive, .adaptive)
 │   │       └── num_extensions.dart       # Number extensions (.sp, .w, .h)
-│   └── smart_ui.dart
+│   └── smartui.dart
 ├── example/                 # Full example app
 ├── test/                    # Comprehensive tests
 └── playground/              # Interactive web playground

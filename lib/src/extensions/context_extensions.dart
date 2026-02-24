@@ -158,7 +158,7 @@ extension SmartContextExtension on BuildContext {
 
   // ============ Configuration ============
 
-  /// The smart_ui configuration.
+  /// The smartui configuration.
   SmartUiData get smartUiConfig => SmartUi.of(this);
 
   /// The breakpoints configuration.

@@ -1,4 +1,4 @@
-/// smart_ui - The Tailwind CSS of Flutter
+/// smartui - The Tailwind CSS of Flutter
 ///
 /// A zero-config, declarative adaptive UI toolkit for responsive,
 /// platform-aware Flutter apps.
@@ -12,7 +12,7 @@
 /// ## Quick Start
 ///
 /// ```dart
-/// import 'package:smart_ui/smart_ui.dart';
+/// import 'package:smartui/smartui.dart';
 ///
 /// // Wrap your app with SmartUi for custom config (optional)
 /// SmartUi(

@@ -59,13 +59,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  smart_ui:
+  smartui:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.1.0"
+    version: "1.0.0+2"
   vector_math:
     dependency: transitive
     description:
