@@ -15,7 +15,10 @@
 </p>
 
 <p align="center">
-  <a href="https://sahilsharma2710.github.io/smart_ui/">🌐 Live Demo</a> · 
+  <a href="https://sahilsharma2710.github.io/smart_ui/"><img src="https://img.shields.io/badge/🚀_LIVE_DASHBOARD-Try_It_Now!-6366F1?style=for-the-badge&logoColor=white" alt="Live Dashboard" height="50"></a>
+</p>
+
+<p align="center">
   <a href="https://pub.dev/packages/adaptive_kit">📦 pub.dev</a> · 
   <a href="https://github.com/SahilSharma2710/smart_ui">⭐ GitHub</a>
 </p>
