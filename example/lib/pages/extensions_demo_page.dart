@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class ExtensionsDemoPage extends StatelessWidget {
   const ExtensionsDemoPage({super.key});
@@ -17,15 +19,15 @@ class ExtensionsDemoPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildContextExtensionsDemo(context),
+            StaggeredFadeIn(index: 1, child: _buildContextExtensionsDemo(context)),
             const VGap.xl(),
-            _buildResponsiveValueDemo(context),
+            StaggeredFadeIn(index: 2, child: _buildResponsiveValueDemo(context)),
             const VGap.xl(),
-            _buildWidgetExtensionsDemo(context),
+            StaggeredFadeIn(index: 3, child: _buildWidgetExtensionsDemo(context)),
             const VGap.xl(),
-            _buildNumberExtensionsDemo(context),
+            StaggeredFadeIn(index: 4, child: _buildNumberExtensionsDemo(context)),
           ],
         ),
       ),
@@ -33,20 +35,12 @@ class ExtensionsDemoPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SmartText(
-          'Extensions',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
+    return PremiumPageHeader(
+      icon: Icons.extension_rounded,
+      title: 'Extensions',
+      subtitle:
           'Powerful context and widget extensions for cleaner, more expressive code.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ],
+      trailing: const BreakpointIndicator(),
     );
   }
 

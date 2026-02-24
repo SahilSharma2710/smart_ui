@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class TokensDemoPage extends StatelessWidget {
   const TokensDemoPage({super.key});
@@ -17,13 +19,13 @@ class TokensDemoPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildTypographySection(context),
+            StaggeredFadeIn(index: 1, child: _buildTypographySection(context)),
             const VGap.xl(),
-            _buildSpacingSection(context),
+            StaggeredFadeIn(index: 2, child: _buildSpacingSection(context)),
             const VGap.xl(),
-            _buildRadiusSection(context),
+            StaggeredFadeIn(index: 3, child: _buildRadiusSection(context)),
           ],
         ),
       ),
@@ -31,21 +33,13 @@ class TokensDemoPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SmartText(
-          'Design Tokens',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
+    return PremiumPageHeader(
+      icon: Icons.palette_rounded,
+      title: 'Design Tokens',
+      subtitle:
           'Consistent design tokens for typography, spacing, and border radius. '
           'Use these tokens to maintain visual consistency across your app.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ],
+      trailing: const BreakpointIndicator(),
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,144 +19,236 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeroSection(context)),
             const VGap.xl(),
-            _buildFeatureGrid(context),
+            const VGap.lg(),
+            StaggeredFadeIn(index: 1, child: _buildStatsSection(context)),
             const VGap.xl(),
-            _buildQuickStats(context),
+            const VGap.lg(),
+            StaggeredFadeIn(index: 2, child: _buildFeaturesSection(context)),
+            const VGap.xl(),
+            const VGap.lg(),
+            StaggeredFadeIn(index: 3, child: _buildQuickStartSection(context)),
+            const VGap.xl(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeroSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SmartText.responsive(
-          'Welcome to adaptive_kit',
-          mobile: TypographyStyle.headlineSmall,
-          tablet: TypographyStyle.headlineMedium,
-          desktop: TypographyStyle.headlineLarge,
-        ),
-        const VGap.sm(),
-        SmartText(
-          'The Tailwind CSS of Flutter. A zero-config, declarative adaptive UI toolkit '
-          'for building responsive, platform-aware Flutter applications.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        const VGap.lg(),
-        ResponsiveBuilder(
-          builder: (context, info) {
-            return Container(
+        Row(
+          children: [
+            Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: SmartSpacing.md,
-                vertical: SmartSpacing.sm,
+                vertical: SmartSpacing.xs,
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: SmartRadius.md,
+                gradient: LinearGradient(
+                  colors: [
+                    PremiumColors.gold.withAlpha(51),
+                    PremiumColors.amber.withAlpha(26),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: PremiumColors.gold.withAlpha(77)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.aspect_ratio,
-                    size: 18,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const HGap.sm(),
+                  Icon(Icons.star_rounded,
+                      size: 14, color: PremiumColors.gold),
+                  const HGap.xs(),
                   Text(
-                    'Current: ${info.breakpoint.name.toUpperCase()} '
-                    '(${info.screenWidth.toInt()} x ${info.screenHeight.toInt()})',
-                    style: SmartTypography.labelMedium.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    'The Tailwind CSS of Flutter',
+                    style: PremiumTypography.labelSmall.copyWith(
+                      color: PremiumColors.gold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ],
+        ),
+        const VGap.lg(),
+        ShaderMask(
+          shaderCallback: (bounds) =>
+              PremiumGradients.primary.createShader(bounds),
+          child: Text(
+            'adaptive_kit',
+            style: PremiumTypography.displayLarge.copyWith(
+              color: Colors.white,
+              fontSize: context.responsive(
+                mobile: 48.0,
+                tablet: 64.0,
+                desktop: 80.0,
+              ),
+              height: 1.0,
+            ),
+          ),
+        ),
+        const VGap.md(),
+        SizedBox(
+          width: context.responsive(
+            mobile: double.infinity,
+            tablet: 600.0,
+            desktop: 700.0,
+          ),
+          child: Text(
+            'A zero-config, declarative adaptive UI toolkit for building responsive, platform-aware Flutter applications with elegance.',
+            style: PremiumTypography.bodyLarge.copyWith(
+              color: PremiumColors.textSecondary,
+              height: 1.6,
+            ),
+          ),
+        ),
+        const VGap.xl(),
+        Wrap(
+          spacing: SmartSpacing.md,
+          runSpacing: SmartSpacing.md,
+          children: [
+            _HeroButton(
+              label: 'Get Started',
+              icon: Icons.rocket_launch_rounded,
+              isPrimary: true,
+              onTap: () {},
+            ),
+            _HeroButton(
+              label: 'View on pub.dev',
+              icon: Icons.open_in_new_rounded,
+              onTap: () {},
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildFeatureGrid(BuildContext context) {
+  Widget _buildStatsSection(BuildContext context) {
+    return SmartGrid(
+      columns: 12,
+      spacing: SmartSpacing.md,
+      runSpacing: SmartSpacing.md,
+      children: [
+        SmartCol(
+          mobile: 6,
+          tablet: 3,
+          desktop: 3,
+          child: PremiumStatCard(
+            icon: Icons.widgets_rounded,
+            value: 24,
+            label: 'Widgets',
+            suffix: '+',
+            color: PremiumColors.info,
+          ),
+        ),
+        SmartCol(
+          mobile: 6,
+          tablet: 3,
+          desktop: 3,
+          child: PremiumStatCard(
+            icon: Icons.devices_rounded,
+            value: 5,
+            label: 'Breakpoints',
+            suffix: '',
+            color: PremiumColors.success,
+          ),
+        ),
+        SmartCol(
+          mobile: 6,
+          tablet: 3,
+          desktop: 3,
+          child: PremiumStatCard(
+            icon: Icons.extension_rounded,
+            value: 50,
+            label: 'Extensions',
+            suffix: '+',
+            color: PremiumColors.warning,
+          ),
+        ),
+        SmartCol(
+          mobile: 6,
+          tablet: 3,
+          desktop: 3,
+          child: PremiumStatCard(
+            icon: Icons.settings_rounded,
+            value: 0,
+            label: 'Config Required',
+            suffix: '',
+            color: PremiumColors.primary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFeaturesSection(BuildContext context) {
     final features = [
-      _FeatureItem(
-        icon: Icons.screen_rotation,
-        title: 'Breakpoints',
-        description: 'Five-tier responsive system from watch to TV',
-        color: Colors.blue,
+      _Feature(
+        icon: Icons.devices_rounded,
+        title: 'Responsive Breakpoints',
+        description:
+            'Five-tier system from watch to TV with automatic detection',
+        gradient: [PremiumColors.info, PremiumColors.info.withAlpha(179)],
       ),
-      _FeatureItem(
-        icon: Icons.view_quilt,
-        title: 'SmartLayout',
+      _Feature(
+        icon: Icons.view_quilt_rounded,
+        title: 'Smart Layouts',
         description: 'Declarative layout switching per breakpoint',
-        color: Colors.green,
+        gradient: [PremiumColors.success, PremiumColors.success.withAlpha(179)],
       ),
-      _FeatureItem(
-        icon: Icons.grid_view,
+      _Feature(
+        icon: Icons.grid_view_rounded,
         title: 'Responsive Grid',
-        description: 'Flexible 12-column grid with breakpoint spans',
-        color: Colors.orange,
+        description: 'Flexible 12-column grid with breakpoint-aware spans',
+        gradient: [PremiumColors.warning, PremiumColors.warning.withAlpha(179)],
       ),
-      _FeatureItem(
-        icon: Icons.widgets,
+      _Feature(
+        icon: Icons.auto_awesome_rounded,
         title: 'Adaptive Widgets',
-        description: 'Platform-aware UI components',
-        color: Colors.purple,
+        description: 'Platform-aware components that feel native everywhere',
+        gradient: [PremiumColors.primary, PremiumColors.gradientEnd],
       ),
-      _FeatureItem(
-        icon: Icons.palette,
+      _Feature(
+        icon: Icons.palette_rounded,
         title: 'Design Tokens',
-        description: 'Typography, spacing, and radius scales',
-        color: Colors.red,
+        description: 'Typography, spacing, and radius scales built-in',
+        gradient: [PremiumColors.error, PremiumColors.error.withAlpha(179)],
       ),
-      _FeatureItem(
-        icon: Icons.visibility,
-        title: 'Visibility',
-        description: 'Show/hide widgets per breakpoint',
-        color: Colors.teal,
-      ),
-      _FeatureItem(
-        icon: Icons.extension,
-        title: 'Extensions',
-        description: 'Powerful context and widget extensions',
-        color: Colors.indigo,
-      ),
-      _FeatureItem(
-        icon: Icons.devices,
-        title: 'Platform Detection',
-        description: 'Smart platform-aware rendering',
-        color: Colors.pink,
+      _Feature(
+        icon: Icons.visibility_rounded,
+        title: 'Visibility Control',
+        description: 'Show or hide widgets based on breakpoints',
+        gradient: [
+          PremiumColors.gradientStart,
+          PremiumColors.gradientStart.withAlpha(179)
+        ],
       ),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SmartText('Features', style: TypographyStyle.titleLarge),
-        const VGap.sm(),
-        SmartText(
-          'Explore the demos using the navigation',
-          style: TypographyStyle.bodyMedium,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        const PremiumSectionHeader(
+          title: 'Core Features',
+          subtitle: 'Everything you need for responsive Flutter apps',
         ),
-        const VGap.md(),
+        const VGap.lg(),
         SmartGrid(
           columns: 12,
           spacing: SmartSpacing.md,
           runSpacing: SmartSpacing.md,
-          children: features.map((feature) {
+          children: features.asMap().entries.map((entry) {
             return SmartCol(
               mobile: 12,
               tablet: 6,
-              desktop: 3,
-              child: _FeatureCard(feature: feature),
+              desktop: 4,
+              child: _FeatureCard(feature: entry.value, index: entry.key),
             );
           }).toList(),
         ),
@@ -162,60 +256,119 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickStats(BuildContext context) {
+  Widget _buildQuickStartSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SmartText('Package Highlights',
-            style: TypographyStyle.titleLarge),
-        const VGap.md(),
+        const PremiumSectionHeader(
+          title: 'Quick Start',
+          subtitle: 'Get up and running in seconds',
+        ),
+        const VGap.lg(),
         SmartGrid(
           columns: 12,
           spacing: SmartSpacing.md,
           runSpacing: SmartSpacing.md,
           children: [
             SmartCol(
-              mobile: 6,
-              tablet: 3,
-              desktop: 3,
-              child: _StatCard(
-                value: '24+',
-                label: 'Widgets',
-                icon: Icons.widgets,
-                color: Colors.blue,
+              mobile: 12,
+              desktop: 6,
+              child: PremiumCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: PremiumColors.info.withAlpha(26),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(Icons.download_rounded,
+                              color: PremiumColors.info, size: 20),
+                        ),
+                        const HGap.md(),
+                        Text('1. Install', style: PremiumTypography.titleMedium),
+                      ],
+                    ),
+                    const VGap.md(),
+                    const PremiumCodeBlock(
+                      code: 'flutter pub add adaptive_kit',
+                    ),
+                  ],
+                ),
               ),
             ),
             SmartCol(
-              mobile: 6,
-              tablet: 3,
-              desktop: 3,
-              child: _StatCard(
-                value: '5',
-                label: 'Breakpoints',
-                icon: Icons.screen_rotation,
-                color: Colors.green,
+              mobile: 12,
+              desktop: 6,
+              child: PremiumCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: PremiumColors.success.withAlpha(26),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(Icons.code_rounded,
+                              color: PremiumColors.success, size: 20),
+                        ),
+                        const HGap.md(),
+                        Text('2. Wrap App', style: PremiumTypography.titleMedium),
+                      ],
+                    ),
+                    const VGap.md(),
+                    const PremiumCodeBlock(
+                      code:
+                          'SmartUi(\n  child: MaterialApp(...),\n)',
+                    ),
+                  ],
+                ),
               ),
             ),
             SmartCol(
-              mobile: 6,
-              tablet: 3,
-              desktop: 3,
-              child: _StatCard(
-                value: '50+',
-                label: 'Extensions',
-                icon: Icons.extension,
-                color: Colors.orange,
-              ),
-            ),
-            SmartCol(
-              mobile: 6,
-              tablet: 3,
-              desktop: 3,
-              child: _StatCard(
-                value: '0',
-                label: 'Config',
-                icon: Icons.settings,
-                color: Colors.purple,
+              mobile: 12,
+              child: PremiumCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: PremiumColors.primary.withAlpha(26),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(Icons.auto_awesome_rounded,
+                              color: PremiumColors.primary, size: 20),
+                        ),
+                        const HGap.md(),
+                        Text('3. Build Responsive UI',
+                            style: PremiumTypography.titleMedium),
+                      ],
+                    ),
+                    const VGap.md(),
+                    const PremiumCodeBlock(
+                      code: '''SmartGrid(
+  columns: 12,
+  children: [
+    SmartCol(
+      mobile: 12,
+      tablet: 6,
+      desktop: 4,
+      child: MyWidget(),
+    ),
+  ],
+)''',
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -225,99 +378,149 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _FeatureItem {
-  final IconData icon;
-  final String title;
-  final String description;
-  final Color color;
-
-  _FeatureItem({
+class _Feature {
+  const _Feature({
     required this.icon,
     required this.title,
     required this.description,
-    required this.color,
+    required this.gradient,
   });
+
+  final IconData icon;
+  final String title;
+  final String description;
+  final List<Color> gradient;
 }
 
-class _FeatureCard extends StatelessWidget {
-  const _FeatureCard({required this.feature});
+class _FeatureCard extends StatefulWidget {
+  const _FeatureCard({required this.feature, required this.index});
 
-  final _FeatureItem feature;
+  final _Feature feature;
+  final int index;
+
+  @override
+  State<_FeatureCard> createState() => _FeatureCardState();
+}
+
+class _FeatureCardState extends State<_FeatureCard> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(SmartSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(SmartSpacing.sm),
-              decoration: BoxDecoration(
-                color: feature.color.withOpacity(0.1),
-                borderRadius: SmartRadius.sm,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        transform: Matrix4.identity()..translate(0.0, _isHovered ? -4.0 : 0.0),
+        child: PremiumCard(
+          padding: const EdgeInsets.all(SmartSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: widget.feature.gradient),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.feature.gradient.first.withAlpha(77),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child:
+                    Icon(widget.feature.icon, color: Colors.white, size: 24),
               ),
-              child: Icon(
-                feature.icon,
-                color: feature.color,
-                size: 24,
+              const VGap.lg(),
+              Text(widget.feature.title, style: PremiumTypography.titleMedium),
+              const VGap.sm(),
+              Text(
+                widget.feature.description,
+                style: PremiumTypography.bodySmall,
               ),
-            ),
-            const VGap.md(),
-            SmartText(
-              feature.title,
-              style: TypographyStyle.titleMedium,
-            ),
-            const VGap.xs(),
-            SmartText(
-              feature.description,
-              style: TypographyStyle.bodySmall,
-              textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
-    required this.value,
+class _HeroButton extends StatefulWidget {
+  const _HeroButton({
     required this.label,
     required this.icon,
-    required this.color,
+    required this.onTap,
+    this.isPrimary = false,
   });
 
-  final String value;
   final String label;
   final IconData icon;
-  final Color color;
+  final VoidCallback onTap;
+  final bool isPrimary;
+
+  @override
+  State<_HeroButton> createState() => _HeroButtonState();
+}
+
+class _HeroButtonState extends State<_HeroButton> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(SmartSpacing.md),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 28),
-            const VGap.sm(),
-            SmartText(
-              value,
-              style: TypographyStyle.headlineMedium,
-              textColor: color,
-            ),
-            SmartText(
-              label,
-              style: TypographyStyle.labelMedium,
-              textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ],
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(
+            horizontal: SmartSpacing.lg,
+            vertical: SmartSpacing.md,
+          ),
+          decoration: BoxDecoration(
+            gradient: widget.isPrimary ? PremiumGradients.primary : null,
+            color: widget.isPrimary ? null : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: widget.isPrimary
+                ? null
+                : Border.all(color: PremiumColors.cardBorder),
+            boxShadow: widget.isPrimary && _isHovered
+                ? [
+                    BoxShadow(
+                      color: PremiumColors.gradientStart.withAlpha(102),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.icon,
+                size: 18,
+                color: widget.isPrimary
+                    ? Colors.white
+                    : PremiumColors.textSecondary,
+              ),
+              const HGap.sm(),
+              Text(
+                widget.label,
+                style: PremiumTypography.labelLarge.copyWith(
+                  color: widget.isPrimary
+                      ? Colors.white
+                      : PremiumColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

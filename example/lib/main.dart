@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import 'theme/premium_theme.dart';
+import 'widgets/premium_widgets.dart';
 import 'pages/home_page.dart';
 import 'pages/breakpoints_demo_page.dart';
 import 'pages/layout_demo_page.dart';
@@ -14,65 +17,26 @@ void main() {
   runApp(const AdaptiveKitDemoApp());
 }
 
-class AdaptiveKitDemoApp extends StatefulWidget {
+class AdaptiveKitDemoApp extends StatelessWidget {
   const AdaptiveKitDemoApp({super.key});
-
-  @override
-  State<AdaptiveKitDemoApp> createState() => _AdaptiveKitDemoAppState();
-}
-
-class _AdaptiveKitDemoAppState extends State<AdaptiveKitDemoApp> {
-  ThemeMode _themeMode = ThemeMode.system;
-
-  void _toggleTheme() {
-    setState(() {
-      _themeMode = _themeMode == ThemeMode.light
-          ? ThemeMode.dark
-          : _themeMode == ThemeMode.dark
-              ? ThemeMode.system
-              : ThemeMode.light;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return SmartUi(
       child: MaterialApp(
-        title: 'adaptive_kit Playground',
+        title: 'adaptive_kit',
         debugShowCheckedModeBanner: false,
-        themeMode: _themeMode,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF6750A4),
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF6750A4),
-            brightness: Brightness.dark,
-          ),
-          useMaterial3: true,
-        ),
-        home: MainNavigation(
-          themeMode: _themeMode,
-          onToggleTheme: _toggleTheme,
-        ),
+        themeMode: ThemeMode.dark,
+        theme: createPremiumLightTheme(),
+        darkTheme: createPremiumTheme(),
+        home: const MainNavigation(),
       ),
     );
   }
 }
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({
-    super.key,
-    required this.themeMode,
-    required this.onToggleTheme,
-  });
-
-  final ThemeMode themeMode;
-  final VoidCallback onToggleTheme;
+  const MainNavigation({super.key});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -80,6 +44,17 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
+
+  static const _navItems = [
+    _NavItem(Icons.home_rounded, Icons.home_outlined, 'Home'),
+    _NavItem(Icons.devices_rounded, Icons.devices_outlined, 'Breakpoints'),
+    _NavItem(Icons.view_quilt_rounded, Icons.view_quilt_outlined, 'Layout'),
+    _NavItem(Icons.grid_view_rounded, Icons.grid_view_outlined, 'Grid'),
+    _NavItem(Icons.widgets_rounded, Icons.widgets_outlined, 'Widgets'),
+    _NavItem(Icons.palette_rounded, Icons.palette_outlined, 'Tokens'),
+    _NavItem(Icons.visibility_rounded, Icons.visibility_outlined, 'Visibility'),
+    _NavItem(Icons.extension_rounded, Icons.extension_outlined, 'Extensions'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -99,113 +74,201 @@ class _MainNavigationState extends State<MainNavigation> {
       onDestinationSelected: (index) {
         setState(() => _selectedIndex = index);
       },
-      destinations: const [
-        SmartDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.screen_rotation_outlined),
-          selectedIcon: Icon(Icons.screen_rotation),
-          label: 'Breakpoints',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.view_quilt_outlined),
-          selectedIcon: Icon(Icons.view_quilt),
-          label: 'Layout',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.grid_view_outlined),
-          selectedIcon: Icon(Icons.grid_view),
-          label: 'Grid',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.widgets_outlined),
-          selectedIcon: Icon(Icons.widgets),
-          label: 'Widgets',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.palette_outlined),
-          selectedIcon: Icon(Icons.palette),
-          label: 'Tokens',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.visibility_outlined),
-          selectedIcon: Icon(Icons.visibility),
-          label: 'Visibility',
-        ),
-        SmartDestination(
-          icon: Icon(Icons.extension_outlined),
-          selectedIcon: Icon(Icons.extension),
-          label: 'Extensions',
-        ),
-      ],
+      destinations: _navItems
+          .map((item) => SmartDestination(
+                icon: GradientIcon(
+                  item.outlinedIcon,
+                  size: 24,
+                ),
+                selectedIcon: GradientIcon(
+                  item.filledIcon,
+                  size: 24,
+                ),
+                label: item.label,
+              ))
+          .toList(),
       appBar: AppBar(
+        backgroundColor: PremiumColors.surface,
+        surfaceTintColor: Colors.transparent,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: SmartRadius.sm,
+                gradient: PremiumGradients.primary,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: PremiumColors.gradientStart.withAlpha(77),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              child: Icon(
-                Icons.auto_awesome,
+              child: const Icon(
+                Icons.auto_awesome_rounded,
                 size: 18,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                color: Colors.white,
               ),
             ),
-            const HGap.sm(),
-            const Text('adaptive_kit'),
+            const HGap.md(),
+            const GradientText(
+              'adaptive_kit',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
+              ),
+            ),
           ],
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              widget.themeMode == ThemeMode.light
-                  ? Icons.light_mode
-                  : widget.themeMode == ThemeMode.dark
-                      ? Icons.dark_mode
-                      : Icons.brightness_auto,
-            ),
-            tooltip: 'Toggle theme',
-            onPressed: widget.onToggleTheme,
+          PremiumChip(
+            label: 'v1.0.3',
+            color: PremiumColors.gold,
+            icon: Icons.verified_rounded,
           ),
           const HGap.sm(),
+          const BreakpointIndicator(),
+          const HGap.sm(),
+          const PlatformBadge(),
+          const HGap.md(),
         ],
       ),
-      drawerHeader: Padding(
-        padding: const EdgeInsets.all(SmartSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      drawerHeader: _buildDrawerHeader(context),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: pages[_selectedIndex],
+      ),
+    );
+  }
+
+  Widget _buildDrawerHeader(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(SmartSpacing.lg),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            PremiumColors.gradientStart.withAlpha(51),
+            PremiumColors.gradientMiddle.withAlpha(26),
+            Colors.transparent,
+          ],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: PremiumGradients.primary,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: PremiumColors.gradientStart.withAlpha(102),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.auto_awesome_rounded,
+              size: 32,
+              color: Colors.white,
+            ),
+          ),
+          const VGap.lg(),
+          const GradientText(
+            'adaptive_kit',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const VGap.xs(),
+          Text(
+            'Build responsive Flutter apps',
+            style: PremiumTypography.bodySmall,
+          ),
+          const VGap.lg(),
+          Row(
+            children: [
+              _DrawerLink(
+                icon: Icons.public_rounded,
+                label: 'pub.dev',
+                onTap: () => _launchUrl('https://pub.dev/packages/adaptive_kit'),
+              ),
+              const HGap.md(),
+              _DrawerLink(
+                icon: Icons.code_rounded,
+                label: 'GitHub',
+                onTap: () => _launchUrl('https://github.com/example/adaptive_kit'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+}
+
+class _NavItem {
+  const _NavItem(this.filledIcon, this.outlinedIcon, this.label);
+  final IconData filledIcon;
+  final IconData outlinedIcon;
+  final String label;
+}
+
+class _DrawerLink extends StatelessWidget {
+  const _DrawerLink({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: SmartSpacing.sm,
+          vertical: SmartSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(color: PremiumColors.cardBorder),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: SmartRadius.md,
+            Icon(icon, size: 14, color: PremiumColors.textSecondary),
+            const HGap.xs(),
+            Text(
+              label,
+              style: PremiumTypography.labelSmall.copyWith(
+                color: PremiumColors.textSecondary,
               ),
-              child: Icon(
-                Icons.auto_awesome,
-                size: 32,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-            const VGap.md(),
-            const SmartText(
-              'adaptive_kit',
-              style: TypographyStyle.titleLarge,
-            ),
-            const SmartText(
-              'Interactive Playground',
-              style: TypographyStyle.bodySmall,
             ),
           ],
         ),
       ),
-      body: pages[_selectedIndex],
     );
   }
 }

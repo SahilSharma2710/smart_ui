@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class BreakpointsDemoPage extends StatelessWidget {
   const BreakpointsDemoPage({super.key});
@@ -17,15 +19,15 @@ class BreakpointsDemoPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildCurrentBreakpointInfo(context),
+            StaggeredFadeIn(index: 1, child: _buildCurrentBreakpointInfo(context)),
             const VGap.xl(),
-            _buildBreakpointScale(context),
+            StaggeredFadeIn(index: 2, child: _buildBreakpointScale(context)),
             const VGap.xl(),
-            _buildOrientationInfo(context),
+            StaggeredFadeIn(index: 3, child: _buildOrientationInfo(context)),
             const VGap.xl(),
-            _buildBreakpointComparison(context),
+            StaggeredFadeIn(index: 4, child: _buildBreakpointComparison(context)),
           ],
         ),
       ),
@@ -33,21 +35,13 @@ class BreakpointsDemoPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SmartText(
-          'Breakpoints',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
+    return PremiumPageHeader(
+      icon: Icons.devices_rounded,
+      title: 'Breakpoints',
+      subtitle:
           'adaptive_kit uses a five-tier breakpoint system: watch, mobile, tablet, desktop, and TV. '
           'Resize your window to see breakpoints change in real-time.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ],
+      trailing: const BreakpointIndicator(),
     );
   }
 

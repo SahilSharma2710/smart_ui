@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class GridDemoPage extends StatefulWidget {
   const GridDemoPage({super.key});
@@ -26,13 +28,13 @@ class _GridDemoPageState extends State<GridDemoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildInteractiveGrid(context),
+            StaggeredFadeIn(index: 1, child: _buildInteractiveGrid(context)),
             const VGap.xl(),
-            _buildFixedGrid(context),
+            StaggeredFadeIn(index: 2, child: _buildFixedGrid(context)),
             const VGap.xl(),
-            _buildProductGrid(context),
+            StaggeredFadeIn(index: 3, child: _buildProductGrid(context)),
           ],
         ),
       ),
@@ -40,21 +42,13 @@ class _GridDemoPageState extends State<GridDemoPage> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SmartText(
-          'Responsive Grid',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
+    return PremiumPageHeader(
+      icon: Icons.grid_view_rounded,
+      title: 'Responsive Grid',
+      subtitle:
           'SmartGrid provides a flexible 12-column grid system. '
           'Use SmartCol to define how many columns each child spans at different breakpoints.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ],
+      trailing: const BreakpointIndicator(),
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class LayoutDemoPage extends StatelessWidget {
   const LayoutDemoPage({super.key});
@@ -17,13 +19,13 @@ class LayoutDemoPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildSmartLayoutDemo(context),
+            StaggeredFadeIn(index: 1, child: _buildSmartLayoutDemo(context)),
             const VGap.xl(),
-            _buildResponsiveBuilderDemo(context),
+            StaggeredFadeIn(index: 2, child: _buildResponsiveBuilderDemo(context)),
             const VGap.xl(),
-            _buildBreakpointObserverDemo(context),
+            StaggeredFadeIn(index: 3, child: _buildBreakpointObserverDemo(context)),
           ],
         ),
       ),
@@ -31,21 +33,13 @@ class LayoutDemoPage extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SmartText(
-          'Responsive Layouts',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
+    return PremiumPageHeader(
+      icon: Icons.view_quilt_rounded,
+      title: 'Responsive Layouts',
+      subtitle:
           'SmartLayout provides declarative layout switching based on breakpoints. '
           'Define different layouts for each screen size and the widget handles the rest.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ],
+      trailing: const BreakpointIndicator(),
     );
   }
 

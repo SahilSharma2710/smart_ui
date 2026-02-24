@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_kit/adaptive_kit.dart';
+import '../theme/premium_theme.dart';
+import '../widgets/premium_widgets.dart';
 
 class WidgetsDemoPage extends StatefulWidget {
   const WidgetsDemoPage({super.key});
@@ -27,21 +29,21 @@ class _WidgetsDemoPageState extends State<WidgetsDemoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context),
+            StaggeredFadeIn(index: 0, child: _buildHeader(context)),
             const VGap.xl(),
-            _buildButtonsSection(context),
+            StaggeredFadeIn(index: 1, child: _buildButtonsSection(context)),
             const VGap.xl(),
-            _buildSwitchSection(context),
+            StaggeredFadeIn(index: 2, child: _buildSwitchSection(context)),
             const VGap.xl(),
-            _buildCheckboxSection(context),
+            StaggeredFadeIn(index: 3, child: _buildCheckboxSection(context)),
             const VGap.xl(),
-            _buildRadioSection(context),
+            StaggeredFadeIn(index: 4, child: _buildRadioSection(context)),
             const VGap.xl(),
-            _buildProgressSection(context),
+            StaggeredFadeIn(index: 5, child: _buildProgressSection(context)),
             const VGap.xl(),
-            _buildDialogSection(context),
+            StaggeredFadeIn(index: 6, child: _buildDialogSection(context)),
             const VGap.xl(),
-            _buildScaffoldSection(context),
+            StaggeredFadeIn(index: 7, child: _buildScaffoldSection(context)),
           ],
         ),
       ),
@@ -52,45 +54,13 @@ class _WidgetsDemoPageState extends State<WidgetsDemoPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SmartText(
-          'Adaptive Widgets',
-          style: TypographyStyle.headlineMedium,
-        ),
-        const VGap.sm(),
-        SmartText(
-          'Widgets that automatically adapt to the current platform. '
-          'On iOS/macOS they use Cupertino styling, on Android/Windows/Linux they use Material.',
-          style: TypographyStyle.bodyLarge,
-          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-        const VGap.md(),
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: SmartSpacing.md,
-            vertical: SmartSpacing.sm,
-          ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            borderRadius: SmartRadius.md,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                context.usesMaterial ? Icons.android : Icons.apple,
-                size: 18,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              const HGap.sm(),
-              Text(
-                'Platform: ${context.platform.name.toUpperCase()} '
-                '(${context.usesMaterial ? "Material" : "Cupertino"})',
-                style: SmartTypography.labelMedium.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ],
-          ),
+        PremiumPageHeader(
+          icon: Icons.widgets_rounded,
+          title: 'Adaptive Widgets',
+          subtitle:
+              'Widgets that automatically adapt to the current platform. '
+              'On iOS/macOS they use Cupertino styling, on Android/Windows/Linux they use Material.',
+          trailing: const PlatformBadge(),
         ),
       ],
     );
