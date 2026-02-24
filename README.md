@@ -1,11 +1,11 @@
-# smartui
+# adaptive_kit
 
-[![pub package](https://img.shields.io/pub/v/smartui.svg)](https://pub.dev/packages/smartui)
+[![pub package](https://img.shields.io/pub/v/adaptive_kit.svg)](https://pub.dev/packages/adaptive_kit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 **The Tailwind CSS of Flutter** - A zero-config, declarative adaptive UI toolkit for responsive, platform-aware Flutter apps.
 
-## Why smartui?
+## Why adaptive_kit?
 
 Building responsive & adaptive UIs in Flutter is painful:
 - MediaQuery boilerplate everywhere for breakpoints
@@ -13,7 +13,7 @@ Building responsive & adaptive UIs in Flutter is painful:
 - Platform-adaptive widgets require manual if/else (Material vs Cupertino)
 - No design token system for consistent spacing/typography
 
-**smartui solves all of this in one package.**
+**adaptive_kit solves all of this in one package.**
 
 ### Before vs After
 
@@ -71,7 +71,7 @@ SmartPadding.all(SpacingSize.md, child: ...)
 
 ```yaml
 dependencies:
-  smartui: ^0.1.0
+  adaptive_kit: ^0.1.0
 ```
 
 ### 2. Wrap Your App (Optional)

@@ -3,7 +3,7 @@ description: >-
   The Tailwind CSS of Flutter. A zero-config, declarative adaptive UI toolkit
   for responsive, platform-aware Flutter apps. Features responsive breakpoints,
   adaptive widgets, design tokens, and utility extensions.
-version: 1.0.0+2
+version: 1.0.0+3
 homepage: https://github.com/sahilsharma/smartui
 repository: https://github.com/sahilsharma/smartui
 issue_tracker: https://github.com/sahilsharma/smartui/issues
