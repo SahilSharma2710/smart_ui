@@ -2,7 +2,7 @@ name: adaptive_kit
 description: >-
   The Tailwind CSS of Flutter. Zero-config adaptive UI toolkit with responsive
   breakpoints, adaptive widgets, design tokens, and utility extensions.
-version: 1.0.3
+version: 1.1.0
 homepage: https://github.com/SahilSharma2710/smart_ui
 repository: https://github.com/SahilSharma2710/smart_ui
 issue_tracker: https://github.com/SahilSharma2710/smart_ui/issues
