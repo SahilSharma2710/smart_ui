@@ -501,6 +501,7 @@ myWidget.scrollable()
 
 ## Dashboard Preview
 
+🌐 **[Live Demo →](https://sahilsharma2710.github.io/smart_ui/)**
 The example app includes an interactive playground to test all features:
 
 ```bash
