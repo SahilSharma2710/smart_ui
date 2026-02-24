@@ -77,7 +77,7 @@ dependencies:
 ### 2. Wrap Your App (Optional)
 
 ```dart
-import 'package:smartui/smartui.dart';
+import 'package:adaptive_kit/smartui.dart';
 
 void main() {
   runApp(

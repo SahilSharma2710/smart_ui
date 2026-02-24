@@ -1,4 +1,4 @@
-name: smartui
+name: adaptive_kit
 description: >-
   The Tailwind CSS of Flutter. A zero-config, declarative adaptive UI toolkit
   for responsive, platform-aware Flutter apps. Features responsive breakpoints,

@@ -12,7 +12,7 @@
 /// ## Quick Start
 ///
 /// ```dart
-/// import 'package:smartui/smartui.dart';
+/// import 'package:adaptive_kit/adaptive_kit.dart';
 ///
 /// // Wrap your app with SmartUi for custom config (optional)
 /// SmartUi(

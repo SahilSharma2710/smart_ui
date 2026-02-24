@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smartui/smartui.dart';
+import 'package:adaptive_kit/adaptive_kit.dart';
 
 void main() {
   group('SmartUi', () {

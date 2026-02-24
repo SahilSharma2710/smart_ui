@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smartui/smartui.dart';
+import 'package:adaptive_kit/adaptive_kit.dart';
 
 void main() {
   runApp(const SmartUiExampleApp());
