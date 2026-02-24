@@ -2,68 +2,71 @@
 
 [![pub package](https://img.shields.io/pub/v/adaptive_kit.svg)](https://pub.dev/packages/adaptive_kit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 
-**The Tailwind CSS of Flutter** - A zero-config, declarative adaptive UI toolkit for responsive, platform-aware Flutter apps.
+**The Tailwind CSS of Flutter.** Zero-config adaptive UI toolkit with responsive breakpoints, platform-aware widgets, design tokens, and powerful extensions.
+
+---
 
 ## Why adaptive_kit?
 
 Building responsive & adaptive UIs in Flutter is painful:
-- MediaQuery boilerplate everywhere for breakpoints
-- No unified breakpoint system across the app
-- Platform-adaptive widgets require manual if/else (Material vs Cupertino)
-- No design token system for consistent spacing/typography
 
-**adaptive_kit solves all of this in one package.**
+| Problem | Solution |
+|---------|----------|
+| MediaQuery boilerplate everywhere | `context.responsive()` returns values per breakpoint |
+| No unified breakpoint system | 5-tier system: watch, mobile, tablet, desktop, tv |
+| Manual Material vs Cupertino checks | `SmartButton`, `SmartSwitch` auto-adapt to platform |
+| Magic numbers for spacing | Design tokens: `SmartSpacing.md`, `SmartRadius.lg` |
+| No grid system like Bootstrap | `SmartGrid` + `SmartCol` with 12-column layout |
 
 ### Before vs After
 
-**Before (vanilla Flutter):**
 ```dart
-// Responsive values - verbose!
+// BEFORE: Verbose MediaQuery checks
 final columns = MediaQuery.of(context).size.width > 900
-    ? 4
-    : MediaQuery.of(context).size.width > 600
-        ? 2
-        : 1;
+    ? 4 : MediaQuery.of(context).size.width > 600 ? 2 : 1;
 
-// Platform checks everywhere
-Widget build(BuildContext context) {
-  if (Platform.isIOS) {
-    return CupertinoButton(...);
-  }
-  return ElevatedButton(...);
-}
-
-// Inconsistent spacing
-Padding(padding: EdgeInsets.all(16.0), ...)  // magic numbers
+// AFTER: Declarative responsive values
+final columns = context.responsive<int>(mobile: 1, tablet: 2, desktop: 4);
 ```
 
-**After (with smartui):**
 ```dart
-// Responsive values - declarative!
-final columns = context.responsive<int>(
-  mobile: 1,
-  tablet: 2,
-  desktop: 4,
-);
+// BEFORE: Platform checks everywhere
+if (Platform.isIOS) {
+  return CupertinoButton(child: Text('Save'), onPressed: () {});
+}
+return ElevatedButton(child: Text('Save'), onPressed: () {});
 
-// Auto platform adaptation
+// AFTER: Auto platform adaptation
 SmartButton(onPressed: () {}, child: Text('Save'))
+```
 
-// Design tokens
+```dart
+// BEFORE: Magic numbers
+Padding(padding: EdgeInsets.all(16.0), child: ...)
+
+// AFTER: Design tokens
 SmartPadding.all(SpacingSize.md, child: ...)
 ```
 
+---
+
 ## Features
 
-- **Responsive Breakpoints** - Mobile, tablet, desktop detection with customizable thresholds
-- **Responsive Values** - `context.responsive<T>()` for breakpoint-based values
-- **Responsive Grid** - 12-column grid system like Bootstrap
-- **Adaptive Widgets** - Auto Material/Cupertino switching (buttons, switches, dialogs)
-- **Adaptive Navigation** - Bottom nav on mobile, rail on tablet, drawer on desktop
-- **Design Tokens** - Spacing, typography, and radius constants
-- **Extensions** - Convenient context, widget, and num extensions
-- **Zero Dependencies** - Only Flutter SDK, fully tree-shakeable
+| Category | Features |
+|----------|----------|
+| **Responsive** | 5 breakpoints, `context.responsive()`, `SmartLayout`, `ResponsiveBuilder` |
+| **Grid System** | 12-column `SmartGrid`, `SmartCol` with per-breakpoint spans |
+| **Adaptive Widgets** | `SmartButton`, `SmartSwitch`, `SmartDialog`, `SmartScaffold` |
+| **Design Tokens** | `SmartSpacing`, `SmartTypography`, `SmartRadius` |
+| **Visibility** | `SmartVisible`, `MobileOnly`, `DesktopOnly`, `HideOnMobile` |
+| **Extensions** | Context, Widget, and Number extensions |
+| **Platform** | Auto Material/Cupertino, platform detection |
+
+**Zero dependencies** - Only Flutter SDK, fully tree-shakeable.
+
+---
 
 ## Quick Start
 
@@ -71,13 +74,13 @@ SmartPadding.all(SpacingSize.md, child: ...)
 
 ```yaml
 dependencies:
-  adaptive_kit: ^0.1.0
+  adaptive_kit: ^1.0.1
 ```
 
 ### 2. Wrap Your App (Optional)
 
 ```dart
-import 'package:adaptive_kit/smartui.dart';
+import 'package:adaptive_kit/adaptive_kit.dart';
 
 void main() {
   runApp(
@@ -97,42 +100,52 @@ void main() {
 ### 3. Use It!
 
 ```dart
-// Check breakpoints
-if (context.isMobile) {
-  return MobileLayout();
+// Responsive values
+final columns = context.responsive<int>(mobile: 1, tablet: 2, desktop: 4);
+
+// Breakpoint checks
+if (context.isDesktop) {
+  return DesktopLayout();
 }
 
-// Responsive values
-final fontSize = context.responsive<double>(
-  mobile: 14,
-  tablet: 16,
-  desktop: 18,
-);
-
 // Design tokens
-SmartPadding.all(SpacingSize.md, child: Text('Hello'))
+SmartPadding.all(SpacingSize.md, child: MyWidget())
 ```
 
-## Responsive Features
+---
 
-### Breakpoint Detection
+## Breakpoints
+
+Five-tier responsive system with smart defaults:
+
+| Breakpoint | Min Width | Use Case |
+|------------|-----------|----------|
+| `watch` | 0px | Wearables |
+| `mobile` | 300px | Phones |
+| `tablet` | 600px | Tablets |
+| `desktop` | 900px | Laptops/Desktops |
+| `tv` | 1200px | Large screens |
 
 ```dart
 // Boolean checks
-context.isMobile      // true on mobile
-context.isTablet      // true on tablet
-context.isDesktop     // true on desktop
-context.isTabletOrLarger   // true on tablet, desktop, tv
-context.isMobileOrSmaller  // true on watch, mobile
+context.isMobile           // true on mobile
+context.isTablet           // true on tablet
+context.isDesktop          // true on desktop
+context.isTabletOrLarger   // tablet, desktop, or tv
+context.isMobileOrSmaller  // watch or mobile
 
 // Get current breakpoint
-final breakpoint = context.breakpoint; // SmartBreakpoint.tablet
+final bp = context.breakpoint; // SmartBreakpoint.tablet
 ```
 
-### Responsive Values
+---
+
+## Responsive Values
+
+Get different values based on the current breakpoint:
 
 ```dart
-// Generic responsive value
+// Generic
 final columns = context.responsive<int>(
   mobile: 1,
   tablet: 2,
@@ -141,14 +154,16 @@ final columns = context.responsive<int>(
 
 // Convenience methods
 final padding = context.responsiveDouble(mobile: 8, tablet: 16, desktop: 24);
-final showSidebar = context.responsiveBool(mobile: false, tablet: true);
+final showSidebar = context.responsiveBool(mobile: false, desktop: true);
 final edges = context.responsivePadding(
   mobile: EdgeInsets.all(8),
   tablet: EdgeInsets.all(16),
 );
 ```
 
-### SmartLayout
+---
+
+## SmartLayout
 
 Switch entire layouts based on breakpoint:
 
@@ -158,7 +173,6 @@ SmartLayout(
   tablet: TabletHomeScreen(),
   desktop: DesktopHomeScreen(),
   builder: (context, breakpoint, child) {
-    // Optional: wrap with animation
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 300),
       child: child,
@@ -167,9 +181,11 @@ SmartLayout(
 )
 ```
 
-### Responsive Grid
+---
 
-12-column grid system:
+## Responsive Grid
+
+Bootstrap-style 12-column grid:
 
 ```dart
 SmartGrid(
@@ -182,53 +198,23 @@ SmartGrid(
       desktop: 4,   // Third width on desktop
       child: ProductCard(),
     ),
-    // ... more columns
+    SmartCol(
+      mobile: 12,
+      tablet: 6,
+      desktop: 4,
+      child: ProductCard(),
+    ),
+    SmartCol(
+      mobile: 12,
+      tablet: 6,
+      desktop: 4,
+      child: ProductCard(),
+    ),
   ],
 )
 ```
 
-### Responsive Visibility
-
-Show/hide widgets by breakpoint:
-
-```dart
-// Show only on desktop
-SmartVisible(
-  visibleOn: [SmartBreakpoint.desktop, SmartBreakpoint.tv],
-  child: Sidebar(),
-)
-
-// Hide on mobile
-SmartVisible(
-  hiddenOn: [SmartBreakpoint.mobile, SmartBreakpoint.watch],
-  child: AdvancedOptions(),
-)
-
-// Convenience widgets
-MobileOnly(child: BottomNav())
-DesktopOnly(child: Sidebar())
-HideOnMobile(child: DetailedView())
-
-// Widget extensions
-myWidget.showOnly([SmartBreakpoint.desktop])
-myWidget.hideOn([SmartBreakpoint.mobile])
-```
-
-### ResponsiveBuilder
-
-Get full breakpoint info:
-
-```dart
-ResponsiveBuilder(
-  builder: (context, info) {
-    return Text(
-      'Breakpoint: ${info.breakpoint.name}\n'
-      'Screen: ${info.screenWidth} x ${info.screenHeight}\n'
-      'Portrait: ${info.isPortrait}'
-    );
-  },
-)
-```
+---
 
 ## Adaptive Widgets
 
@@ -237,14 +223,10 @@ Widgets that automatically use Material on Android and Cupertino on iOS/macOS:
 ### SmartButton
 
 ```dart
-SmartButton(
-  onPressed: () {},
-  child: Text('Save'),
-)
-
-SmartButton.filled(onPressed: () {}, child: Text('Primary'))
-SmartButton.text(onPressed: () {}, child: Text('Text'))
+SmartButton(onPressed: () {}, child: Text('Default'))
+SmartButton.filled(onPressed: () {}, child: Text('Filled'))
 SmartButton.outlined(onPressed: () {}, child: Text('Outlined'))
+SmartButton.text(onPressed: () {}, child: Text('Text'))
 
 // Force specific style
 SmartButton(forceCupertino: true, ...)
@@ -270,14 +252,9 @@ SmartRadio<String>(
 ### SmartIndicator
 
 ```dart
-// Indeterminate
-SmartIndicator()
-
-// Determinate (0.0 to 1.0)
-SmartIndicator(value: 0.5)
-
-// Linear
-SmartLinearIndicator(value: 0.7)
+SmartIndicator()                    // Indeterminate
+SmartIndicator(value: 0.5)          // 50% progress
+SmartLinearIndicator(value: 0.7)    // Linear bar
 ```
 
 ### SmartDialog
@@ -307,7 +284,7 @@ final confirmed = await showSmartConfirmDialog(
 
 ### SmartScaffold
 
-Adaptive navigation that switches between bottom nav, rail, and drawer:
+Adaptive navigation: bottom nav on mobile, rail on tablet, drawer on desktop.
 
 ```dart
 SmartScaffold(
@@ -322,6 +299,8 @@ SmartScaffold(
 )
 ```
 
+---
+
 ## Design Tokens
 
 ### Spacing
@@ -335,21 +314,13 @@ SmartSpacing.lg   // 24px
 SmartSpacing.xl   // 32px
 SmartSpacing.xxl  // 48px
 
-// Widgets
+// Padding widget
 SmartPadding.all(SpacingSize.md, child: ...)
 SmartPadding.symmetric(horizontal: SpacingSize.lg, child: ...)
 
-SmartGap.md()   // Adds 16px gap (auto horizontal/vertical)
-VGap.lg()       // Vertical 24px gap
-HGap.sm()       // Horizontal 8px gap
-
-// Custom tokens
-SmartUi(
-  spacingTokens: SmartSpacingTokens(
-    xs: 2, sm: 4, md: 8, lg: 16, xl: 24, xxl: 32,
-  ),
-  child: MyApp(),
-)
+// Gap widgets
+VGap.md()   // Vertical 16px gap
+HGap.sm()   // Horizontal 8px gap
 ```
 
 ### Typography
@@ -357,23 +328,6 @@ SmartUi(
 ```dart
 SmartText('Heading', style: TypographyStyle.headlineLarge)
 SmartText('Body text', style: TypographyStyle.bodyMedium)
-
-// All styles
-TypographyStyle.displayLarge    // 57px
-TypographyStyle.displayMedium   // 45px
-TypographyStyle.displaySmall    // 36px
-TypographyStyle.headlineLarge   // 32px
-TypographyStyle.headlineMedium  // 28px
-TypographyStyle.headlineSmall   // 24px
-TypographyStyle.titleLarge      // 22px
-TypographyStyle.titleMedium     // 16px
-TypographyStyle.titleSmall      // 14px
-TypographyStyle.bodyLarge       // 16px
-TypographyStyle.bodyMedium      // 14px
-TypographyStyle.bodySmall       // 12px
-TypographyStyle.labelLarge      // 14px
-TypographyStyle.labelMedium     // 12px
-TypographyStyle.labelSmall      // 11px
 
 // Responsive typography
 SmartText.responsive(
@@ -383,6 +337,24 @@ SmartText.responsive(
   desktop: TypographyStyle.titleLarge,
 )
 ```
+
+| Style | Size |
+|-------|------|
+| `displayLarge` | 57px |
+| `displayMedium` | 45px |
+| `displaySmall` | 36px |
+| `headlineLarge` | 32px |
+| `headlineMedium` | 28px |
+| `headlineSmall` | 24px |
+| `titleLarge` | 22px |
+| `titleMedium` | 16px |
+| `titleSmall` | 14px |
+| `bodyLarge` | 16px |
+| `bodyMedium` | 14px |
+| `bodySmall` | 12px |
+| `labelLarge` | 14px |
+| `labelMedium` | 12px |
+| `labelSmall` | 11px |
 
 ### Border Radius
 
@@ -397,42 +369,62 @@ SmartRadius.xxl    // 24px
 SmartRadius.full   // 9999px (circular)
 
 Container(
-  decoration: BoxDecoration(
-    borderRadius: SmartRadius.md,
-  ),
+  decoration: BoxDecoration(borderRadius: SmartRadius.md),
 )
 ```
 
-## Extensions
+---
 
-### Context Extensions
+## Visibility
+
+Show/hide widgets by breakpoint:
+
+```dart
+// Show only on specific breakpoints
+SmartVisible(
+  visibleOn: [SmartBreakpoint.desktop, SmartBreakpoint.tv],
+  child: Sidebar(),
+)
+
+// Hide on specific breakpoints
+SmartVisible(
+  hiddenOn: [SmartBreakpoint.mobile, SmartBreakpoint.watch],
+  child: AdvancedOptions(),
+)
+
+// Convenience widgets
+MobileOnly(child: BottomNav())
+TabletOnly(child: SidePanel())
+DesktopOnly(child: Sidebar())
+HideOnMobile(child: DetailedView())
+HideOnDesktop(child: MobileMenu())
+
+// Widget extensions
+myWidget.showOnMobile()
+myWidget.hideOnDesktop()
+```
+
+---
+
+## Context Extensions
 
 ```dart
 // Screen dimensions
 context.screenWidth
 context.screenHeight
-context.screenSize
+context.aspectRatio
+context.devicePixelRatio
 
 // Orientation
 context.isPortrait
 context.isLandscape
-context.aspectRatio
-
-// Breakpoints
-context.breakpoint       // SmartBreakpoint enum
-context.isMobile
-context.isTablet
-context.isDesktop
-context.isTabletOrLarger
-context.isMobileOrSmaller
 
 // Platform
 context.platform         // SmartPlatform enum
 context.isIOS
 context.isAndroid
 context.isWeb
-context.isMobilePlatform
-context.isDesktopPlatform
+context.isMacOS
 context.usesMaterial
 context.usesCupertino
 
@@ -442,29 +434,21 @@ context.viewInsets
 context.isKeyboardVisible
 ```
 
-### Widget Extensions
+---
+
+## Widget Extensions
 
 ```dart
-// Visibility
-myWidget.showOnly([SmartBreakpoint.desktop])
-myWidget.hideOn([SmartBreakpoint.mobile])
-myWidget.showOnMobile()
-myWidget.showOnDesktop()
-myWidget.hideOnMobile()
-
 // Padding
-myWidget.withPadding(SpacingSize.md)
-myWidget.responsivePadding(mobile: EdgeInsets.all(8), tablet: EdgeInsets.all(16))
 myWidget.paddedAll(16)
 myWidget.paddedHorizontal(8)
+myWidget.withPadding(SpacingSize.md)
 
 // Layout
 myWidget.centered()
 myWidget.expanded()
 myWidget.flexible()
 myWidget.sized(width: 100, height: 50)
-myWidget.constrained(maxWidth: 600)
-myWidget.aligned(Alignment.topLeft)
 
 // Decoration
 myWidget.clipped(borderRadius: SmartRadius.md)
@@ -472,27 +456,17 @@ myWidget.opacity(0.5)
 
 // Gestures
 myWidget.onTap(() => print('tapped'))
-myWidget.inkWell(onTap: () => print('tapped'))
 
-// Safe area
+// Safe area & scrolling
 myWidget.safeArea()
-
-// Scrolling
 myWidget.scrollable()
 ```
 
-### Num Extensions
+---
+
+## Number Extensions
 
 ```dart
-// Scaled sizes (requires SmartSizeInit)
-100.w    // Scaled width
-50.h     // Scaled height
-16.sp    // Scaled text size
-
-// Percentage of screen
-50.sw    // 50% of screen width
-25.sh    // 25% of screen height
-
 // Spacing
 16.horizontalSpace   // SizedBox(width: 16)
 16.verticalSpace     // SizedBox(height: 16)
@@ -509,30 +483,46 @@ myWidget.scrollable()
 2.seconds            // Duration(seconds: 2)
 ```
 
+---
+
 ## Comparison
 
-| Feature | smartui | sizer | flutter_screenutil | responsive_framework |
-|---------|----------|-------|-------------------|---------------------|
-| Breakpoint system | Yes | No | No | Yes |
-| Responsive values | Yes | No | No | Limited |
-| 12-column grid | Yes | No | No | No |
-| Adaptive widgets | Yes | No | No | No |
-| Design tokens | Yes | No | No | No |
-| Platform detection | Yes | No | No | No |
-| Scaled sizing | Yes | Yes | Yes | No |
+| Feature | adaptive_kit | sizer | flutter_screenutil | responsive_framework |
+|---------|--------------|-------|-------------------|---------------------|
+| Breakpoint system | 5-tier | No | No | 4-tier |
+| Responsive values | `context.responsive()` | No | No | Limited |
+| 12-column grid | `SmartGrid` | No | No | No |
+| Adaptive widgets | 10+ widgets | No | No | No |
+| Design tokens | Spacing, Typography, Radius | No | No | No |
+| Platform detection | Full | No | No | No |
 | Zero dependencies | Yes | Yes | Yes | No |
 
-## Default Breakpoints
+---
 
-| Breakpoint | Min Width |
-|------------|-----------|
-| watch | 0px |
-| mobile | 300px |
-| tablet | 600px |
-| desktop | 900px |
-| tv | 1200px |
+## Dashboard Preview
 
-Customize with:
+The example app includes an interactive playground to test all features:
+
+```bash
+cd example
+flutter run -d chrome    # Web
+flutter run -d macos     # macOS
+```
+
+**8 demo pages:**
+- Home / Overview
+- Breakpoints Demo
+- Responsive Layout Demo
+- Responsive Grid Demo
+- Adaptive Widgets Demo
+- Design Tokens Demo
+- Visibility Demo
+- Extensions Demo
+
+---
+
+## Custom Breakpoints
+
 ```dart
 SmartUi(
   breakpoints: SmartBreakpoints.custom(
@@ -546,15 +536,19 @@ SmartUi(
 )
 ```
 
+---
+
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+Contributions welcome! Please read our contributing guidelines.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+---
 
 ## License
 
