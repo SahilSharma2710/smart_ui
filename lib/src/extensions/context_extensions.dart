@@ -279,7 +279,7 @@ extension SmartContextExtension on BuildContext {
 
   /// Returns a responsive value based on the current breakpoint.
   ///
-  /// This is the same as the responsive<T> method but with a shorter name.
+  /// This is the same as the [responsive] method but with a shorter name.
   ///
   /// Example:
   /// ```dart

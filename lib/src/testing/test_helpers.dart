@@ -4,6 +4,7 @@
 /// across multiple breakpoints.
 library;
 
+// ignore: unnecessary_import
 import 'dart:ui' show Brightness;
 
 import 'package:flutter/widgets.dart';
