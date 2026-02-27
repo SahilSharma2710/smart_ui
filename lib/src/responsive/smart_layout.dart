@@ -9,6 +9,26 @@ import 'package:flutter/widgets.dart';
 import '../core/breakpoints.dart';
 import '../core/smart_ui_config.dart';
 
+/// Transition types for animated breakpoint changes.
+///
+/// Use with [SmartLayout] to animate transitions between breakpoints.
+enum SmartTransition {
+  /// No animation, instant switch.
+  none,
+
+  /// Fade between layouts.
+  fade,
+
+  /// Fade with a slide animation.
+  fadeSlide,
+
+  /// Cross-fade between layouts.
+  crossFade,
+
+  /// Scale transition.
+  scale,
+}
+
 /// A widget that displays different children based on the current breakpoint.
 ///
 /// Use [SmartLayout] when you need completely different widget trees
@@ -20,6 +40,16 @@ import '../core/smart_ui_config.dart';
 ///   mobile: MobileHomeScreen(),
 ///   tablet: TabletHomeScreen(),
 ///   desktop: DesktopHomeScreen(),
+/// )
+/// ```
+///
+/// With animated transitions:
+/// ```dart
+/// SmartLayout(
+///   mobile: MobileHomeScreen(),
+///   desktop: DesktopHomeScreen(),
+///   transition: SmartTransition.fadeSlide,
+///   transitionDuration: Duration(milliseconds: 300),
 /// )
 /// ```
 ///
@@ -38,6 +68,10 @@ class SmartLayout extends StatelessWidget {
     this.desktop,
     this.tv,
     this.builder,
+    this.transition = SmartTransition.none,
+    this.transitionDuration = const Duration(milliseconds: 300),
+    this.transitionCurve = Curves.easeInOut,
+    this.transitionBuilder,
   }) : assert(
           watch != null ||
               mobile != null ||
@@ -85,19 +119,101 @@ class SmartLayout extends StatelessWidget {
     Widget child,
   )? builder;
 
+  /// The type of transition animation to use.
+  ///
+  /// Defaults to [SmartTransition.none] for instant switching.
+  final SmartTransition transition;
+
+  /// The duration of the transition animation.
+  ///
+  /// Defaults to 300 milliseconds.
+  final Duration transitionDuration;
+
+  /// The curve to use for the transition animation.
+  ///
+  /// Defaults to [Curves.easeInOut].
+  final Curve transitionCurve;
+
+  /// Custom transition builder for advanced animations.
+  ///
+  /// If provided, overrides [transition].
+  final AnimatedSwitcherTransitionBuilder? transitionBuilder;
+
   @override
   Widget build(BuildContext context) {
     final config = SmartUi.of(context);
     final width = MediaQuery.sizeOf(context).width;
     final breakpoint = config.breakpoints.breakpointForWidth(width);
 
-    final child = _resolveChild(breakpoint);
+    var child = _resolveChild(breakpoint);
+
+    // Add a key based on the breakpoint to trigger AnimatedSwitcher
+    child = KeyedSubtree(
+      key: ValueKey(breakpoint),
+      child: child,
+    );
 
     if (builder != null) {
       return builder!(context, breakpoint, child);
     }
 
-    return child;
+    if (transition == SmartTransition.none && transitionBuilder == null) {
+      return child;
+    }
+
+    return AnimatedSwitcher(
+      duration: transitionDuration,
+      switchInCurve: transitionCurve,
+      switchOutCurve: transitionCurve,
+      transitionBuilder: transitionBuilder ?? _buildTransition,
+      child: child,
+    );
+  }
+
+  Widget _buildTransition(Widget child, Animation<double> animation) {
+    switch (transition) {
+      case SmartTransition.none:
+        return child;
+
+      case SmartTransition.fade:
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+
+      case SmartTransition.fadeSlide:
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.05, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
+
+      case SmartTransition.crossFade:
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: const Interval(0.0, 0.5),
+          ),
+          child: child,
+        );
+
+      case SmartTransition.scale:
+        return ScaleTransition(
+          scale: Tween<double>(
+            begin: 0.95,
+            end: 1.0,
+          ).animate(animation),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+    }
   }
 
   Widget _resolveChild(SmartBreakpoint breakpoint) {

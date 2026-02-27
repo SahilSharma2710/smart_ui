@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 
 import '../core/breakpoints.dart';
 import '../core/smart_ui_config.dart';
+import 'smart_layout.dart';
 
 /// A widget that conditionally shows its child based on breakpoints.
 ///
@@ -27,6 +28,16 @@ import '../core/smart_ui_config.dart';
 ///   child: AdvancedOptions(),
 /// )
 /// ```
+///
+/// With animated transitions:
+/// ```dart
+/// SmartVisible(
+///   visibleOn: [SmartBreakpoint.desktop],
+///   transition: SmartTransition.fade,
+///   transitionDuration: Duration(milliseconds: 200),
+///   child: DesktopSidebar(),
+/// )
+/// ```
 class SmartVisible extends StatelessWidget {
   /// Creates a [SmartVisible] widget.
   ///
@@ -40,6 +51,9 @@ class SmartVisible extends StatelessWidget {
     this.maintainState = false,
     this.maintainAnimation = false,
     this.maintainSize = false,
+    this.transition = SmartTransition.none,
+    this.transitionDuration = const Duration(milliseconds: 200),
+    this.transitionCurve = Curves.easeInOut,
   }) : assert(
           (visibleOn != null) != (hiddenOn != null),
           'Either visibleOn or hiddenOn must be provided, but not both',
@@ -54,6 +68,9 @@ class SmartVisible extends StatelessWidget {
     this.maintainState = false,
     this.maintainAnimation = false,
     this.maintainSize = false,
+    this.transition = SmartTransition.none,
+    this.transitionDuration = const Duration(milliseconds: 200),
+    this.transitionCurve = Curves.easeInOut,
   })  : visibleOn = breakpoints,
         hiddenOn = null;
 
@@ -66,6 +83,9 @@ class SmartVisible extends StatelessWidget {
     this.maintainState = false,
     this.maintainAnimation = false,
     this.maintainSize = false,
+    this.transition = SmartTransition.none,
+    this.transitionDuration = const Duration(milliseconds: 200),
+    this.transitionCurve = Curves.easeInOut,
   })  : hiddenOn = breakpoints,
         visibleOn = null;
 
@@ -96,6 +116,21 @@ class SmartVisible extends StatelessWidget {
   /// Whether to maintain the size when hidden.
   final bool maintainSize;
 
+  /// The type of transition animation to use.
+  ///
+  /// Defaults to [SmartTransition.none] for instant switching.
+  final SmartTransition transition;
+
+  /// The duration of the transition animation.
+  ///
+  /// Defaults to 200 milliseconds.
+  final Duration transitionDuration;
+
+  /// The curve to use for the transition animation.
+  ///
+  /// Defaults to [Curves.easeInOut].
+  final Curve transitionCurve;
+
   @override
   Widget build(BuildContext context) {
     final config = SmartUi.of(context);
@@ -115,7 +150,69 @@ class SmartVisible extends StatelessWidget {
       );
     }
 
-    return isVisible ? child : (replacement ?? const SizedBox.shrink());
+    final displayedChild =
+        isVisible ? child : (replacement ?? const SizedBox.shrink());
+
+    if (transition == SmartTransition.none) {
+      return displayedChild;
+    }
+
+    return AnimatedSwitcher(
+      duration: transitionDuration,
+      switchInCurve: transitionCurve,
+      switchOutCurve: transitionCurve,
+      transitionBuilder: (child, animation) => _buildTransition(child, animation),
+      child: KeyedSubtree(
+        key: ValueKey(isVisible),
+        child: displayedChild,
+      ),
+    );
+  }
+
+  Widget _buildTransition(Widget child, Animation<double> animation) {
+    switch (transition) {
+      case SmartTransition.none:
+        return child;
+
+      case SmartTransition.fade:
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+
+      case SmartTransition.fadeSlide:
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.05, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
+
+      case SmartTransition.crossFade:
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: const Interval(0.0, 0.5),
+          ),
+          child: child,
+        );
+
+      case SmartTransition.scale:
+        return ScaleTransition(
+          scale: Tween<double>(
+            begin: 0.95,
+            end: 1.0,
+          ).animate(animation),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+    }
   }
 
   bool _isVisibleAt(SmartBreakpoint breakpoint) {

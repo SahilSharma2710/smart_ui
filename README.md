@@ -80,10 +80,11 @@ SmartPadding.all(SpacingSize.md, child: ...)
 | **Responsive** | 5 breakpoints, `context.responsive()`, `SmartLayout`, `ResponsiveBuilder` |
 | **Grid System** | 12-column `SmartGrid`, `SmartCol` with per-breakpoint spans |
 | **Adaptive Widgets** | `SmartButton`, `SmartSwitch`, `SmartDialog`, `SmartScaffold` |
-| **Design Tokens** | `SmartSpacing`, `SmartTypography`, `SmartRadius` |
+| **Design Tokens** | `SmartSpacing`, `SmartTypography`, `SmartRadius`, `SmartTheme` |
 | **Visibility** | `SmartVisible`, `MobileOnly`, `DesktopOnly`, `HideOnMobile` |
 | **Extensions** | Context, Widget, and Number extensions |
 | **Platform** | Auto Material/Cupertino, platform detection |
+| **v2.0 NEW** | `SmartApp`, `SmartImage`, `SmartForm`, `SmartWrap`, Animated Transitions, Slivers, Test Helpers |
 
 **Zero dependencies** - Only Flutter SDK, fully tree-shakeable.
 
@@ -95,27 +96,47 @@ SmartPadding.all(SpacingSize.md, child: ...)
 
 ```yaml
 dependencies:
-  adaptive_kit: ^1.0.1
+  adaptive_kit: ^2.0.0
 ```
 
-### 2. Wrap Your App (Optional)
+### 2. Wrap Your App
+
+**Option A: Zero-config with SmartApp (Recommended)**
 
 ```dart
 import 'package:adaptive_kit/adaptive_kit.dart';
 
 void main() {
   runApp(
-    SmartUi(
-      // Custom breakpoints (optional)
-      breakpoints: SmartBreakpoints.custom(
-        mobile: 320,
-        tablet: 768,
-        desktop: 1024,
-      ),
-      child: MyApp(),
+    SmartApp(
+      title: 'My App',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: HomeScreen(),
     ),
   );
 }
+```
+
+**Option B: With Router (go_router, auto_route, etc.)**
+
+```dart
+SmartApp.router(
+  routerConfig: myGoRouter,
+)
+```
+
+**Option C: Manual SmartUi wrapper**
+
+```dart
+SmartUi(
+  breakpoints: SmartBreakpoints.custom(
+    mobile: 320,
+    tablet: 768,
+    desktop: 1024,
+  ),
+  child: MaterialApp(...),
+)
 ```
 
 ### 3. Use It!
@@ -186,20 +207,25 @@ final edges = context.responsivePadding(
 
 ## SmartLayout
 
-Switch entire layouts based on breakpoint:
+Switch entire layouts based on breakpoint with optional animated transitions:
 
 ```dart
+// Basic usage
 SmartLayout(
   mobile: MobileHomeScreen(),
   tablet: TabletHomeScreen(),
   desktop: DesktopHomeScreen(),
-  builder: (context, breakpoint, child) {
-    return AnimatedSwitcher(
-      duration: Duration(milliseconds: 300),
-      child: child,
-    );
-  },
 )
+
+// With animated transitions (NEW in v2.0)
+SmartLayout(
+  transition: SmartTransition.fadeSlide,
+  transitionDuration: Duration(milliseconds: 300),
+  mobile: MobileHomeScreen(),
+  desktop: DesktopHomeScreen(),
+)
+
+// Available transitions: none, fade, fadeSlide, crossFade, scale
 ```
 
 ---
@@ -545,6 +571,140 @@ flutter run -d macos     # macOS
 - Design Tokens Demo
 - Visibility Demo
 - Extensions Demo
+
+---
+
+## v2.0 New Features
+
+### SmartImage - Responsive Images
+
+```dart
+SmartImage(
+  mobile: AssetImage('assets/hero_mobile.png'),
+  tablet: AssetImage('assets/hero_tablet.png'),
+  desktop: AssetImage('assets/hero_desktop.png'),
+  fit: BoxFit.cover,
+)
+
+// From asset paths
+SmartImage.asset(
+  mobile: 'assets/mobile.png',
+  desktop: 'assets/desktop.png',
+)
+
+// From network URLs
+SmartImage.network(
+  mobile: 'https://example.com/small.jpg',
+  desktop: 'https://example.com/large.jpg',
+)
+```
+
+### SmartForm - Responsive Forms
+
+```dart
+SmartForm(
+  // Auto: 1 col mobile, 2 col tablet, 3 col desktop
+  children: [
+    SmartFormField(child: TextField(decoration: InputDecoration(labelText: 'Name'))),
+    SmartFormField(child: TextField(decoration: InputDecoration(labelText: 'Email'))),
+    SmartFormField(
+      span: 2, // Takes 2 columns
+      child: TextField(decoration: InputDecoration(labelText: 'Address')),
+    ),
+  ],
+)
+```
+
+### SmartWrap - Responsive Wrap
+
+```dart
+SmartWrap(
+  mobileItemsPerRow: 2,
+  tabletItemsPerRow: 4,
+  desktopItemsPerRow: 6,
+  fillRow: true,
+  children: items.map((i) => ItemChip(i)).toList(),
+)
+```
+
+### SmartTheme - Breakpoint-Aware Tokens
+
+```dart
+SmartTheme(
+  mobile: SmartThemeData.mobile,
+  tablet: SmartThemeData.tablet,
+  desktop: SmartThemeData.desktop,
+  child: MyApp(),
+)
+
+// Access in widgets
+final theme = SmartTheme.of(context);
+Text('Hello', style: TextStyle(fontSize: theme.baseFontSize));
+```
+
+### SmartSliver Widgets
+
+```dart
+CustomScrollView(
+  slivers: [
+    SmartSliverGrid(
+      mobileColumns: 2,
+      desktopColumns: 4,
+      children: items.map((i) => Card(child: i)).toList(),
+    ),
+    SliverSmartPadding(
+      mobile: EdgeInsets.all(8),
+      desktop: EdgeInsets.all(24),
+      sliver: SliverList(...),
+    ),
+    SliverSmartVisible(
+      visibleOn: [SmartBreakpoint.desktop],
+      sliver: SliverToBoxAdapter(child: DesktopBanner()),
+    ),
+  ],
+)
+```
+
+### New Context Extensions
+
+```dart
+// Platform-adaptive values
+final radius = context.adaptive<double>(material: 4.0, cupertino: 8.0);
+
+// Show/hide helpers
+context.showOnly(breakpoints: [SmartBreakpoint.desktop], child: Sidebar());
+context.hideOn(breakpoints: [SmartBreakpoint.mobile], child: Options());
+
+// Shorter responsive syntax
+final cols = context.bp<int>(mobile: 1, tablet: 2, desktop: 4);
+
+// Simple mobile/desktop checks
+final padding = context.mobileOr<double>(mobile: 12, other: 24);
+final maxWidth = context.desktopOr<double>(desktop: 1200, other: double.infinity);
+```
+
+### Golden Test Helpers
+
+```dart
+testWidgets('renders correctly on mobile', (tester) async {
+  await tester.pumpWidget(
+    createSmartTestWidget(
+      width: 375,
+      child: MyResponsiveWidget(),
+    ),
+  );
+  expect(find.text('Mobile'), findsOneWidget);
+});
+
+// Test multiple breakpoints
+for (final config in SmartTestConfigs.all) {
+  testWidgets('works on ${config.displayName}', (tester) async {
+    await tester.pumpWidget(
+      createSmartTestWidgetForConfig(config: config, child: MyWidget()),
+    );
+  });
+}
+```
 
 ---
 

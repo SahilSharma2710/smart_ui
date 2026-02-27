@@ -5,6 +5,95 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-02-27
+
+### Added
+
+- **SmartApp** - Zero-config MaterialApp wrapper that auto-configures SmartUi
+  - `SmartApp` for Navigator-based apps
+  - `SmartApp.router` for Router-based apps (go_router, auto_route, etc.)
+  - `SmartCupertinoApp` and `SmartCupertinoApp.router` for Cupertino apps
+  - Automatically wraps with SmartUi via MaterialApp.builder
+
+- **SmartImage** - Responsive image widget with breakpoint-specific assets
+  - Different images per breakpoint (mobile, tablet, desktop, etc.)
+  - `SmartImage.asset()` for asset images with path strings
+  - `SmartImage.network()` for network images with URLs
+  - `SmartDecorationImage` for responsive background images
+  - Cascading resolution (falls back to smaller breakpoint images)
+
+- **SmartForm** - Responsive form layout with automatic column adjustment
+  - Auto 1-column on mobile, 2-column on tablet, 3-column on desktop
+  - `SmartFormField` with span support for multi-column fields
+  - `SmartFormRow` for custom row layouts
+  - `SmartFormSection` with title, description, and grouped fields
+  - Customizable column counts per breakpoint
+
+- **SmartSliver widgets** - Responsive slivers for CustomScrollView
+  - `SmartSliverGrid` with breakpoint-based column counts
+  - `SmartSliverGrid.builder` for lazy grid building
+  - `SmartSliverGridExtent` for max extent-based grids
+  - `SliverSmartPadding` for responsive sliver padding
+  - `SliverSmartVisible` for breakpoint-conditional slivers
+  - `SliverSmartList` with different builders per breakpoint
+
+- **SmartWrap** - Responsive Wrap with maxItemsPerRow per breakpoint
+  - `SmartWrap.spaced()` with token-based spacing
+  - `fillRow` option to expand items to fill available width
+  - `SmartChipWrap` for chip/tag layouts with selection support
+
+- **Animated Breakpoint Transitions** - Smooth transitions when breakpoints change
+  - `SmartTransition` enum: none, fade, fadeSlide, crossFade, scale
+  - `transition`, `transitionDuration`, `transitionCurve` on SmartLayout
+  - `transitionBuilder` for custom animations on SmartLayout
+  - Same transition options on SmartVisible
+  - AnimatedSwitcher integration with proper keying
+
+- **SmartTheme** - Breakpoint-aware design token system
+  - `SmartTheme` widget for providing responsive theme data
+  - `SmartThemeData` with typography, spacing, padding, radius, and layout tokens
+  - Pre-built themes: `SmartThemeData.mobile`, `.tablet`, `.desktop`
+  - `SmartThemeData.lerp()` for animated theme transitions
+  - Custom tokens via `customTokens` map and `token<T>()` accessor
+  - `context.smartTheme` extension for easy access
+
+- **SmartSafeArea** - Responsive safe area wrapper
+  - Per-breakpoint control of safe area edges
+  - `SmartSafeArea.mobileOnly()` - safe area only on mobile
+  - `SmartSafeArea.topOnlyMobile()` - top safe area only on mobile
+  - `SliverSmartSafeArea` for slivers
+  - New context extensions: `safeAreaTop`, `safeAreaBottom`, `safeAreaLeft`, `safeAreaRight`
+  - `safeAreaHorizontal`, `safeAreaVertical`, `hasSafeAreaPadding`, `hasTopSafeArea`, `hasBottomSafeArea`
+
+- **Golden Test Helpers** - Utilities for testing responsive widgets
+  - `BreakpointTestConfig` for defining test configurations
+  - `SmartTestConfigs` with pre-built configs (watch, mobile, tablet, desktop, tv)
+  - `createSmartTestWidget()` helper for widget tests
+  - `createSmartTestWidgetForConfig()` for config-based tests
+  - `testSmartBreakpoints()` template for multi-breakpoint testing
+  - `BreakpointCapture` widget for capturing current breakpoint in tests
+  - `BreakpointDebugOverlay` for visual debugging
+
+- **New Context Extensions**
+  - `context.adaptive<T>(material:, cupertino:)` - platform-based value selection
+  - `context.adaptiveWidget(material:, cupertino:)` - platform-based widget selection
+  - `context.showOnly(breakpoints:, child:)` - show widget on specific breakpoints
+  - `context.hideOn(breakpoints:, child:)` - hide widget on specific breakpoints
+  - `context.bp<T>()` - shorter alias for responsive value selection
+  - `context.mobileOr<T>(mobile:, other:)` - mobile vs non-mobile value
+  - `context.desktopOr<T>(desktop:, other:)` - desktop vs non-desktop value
+
+### Changed
+
+- **BREAKING**: Minimum Flutter version is now 3.10.0
+- Improved documentation throughout all public APIs
+- Enhanced cascading logic for better breakpoint fallbacks
+
+### Fixed
+
+- Consistent patterns across all responsive widgets
+- Better null safety handling in cascading resolution
+
 ## [1.1.3] - 2025-02-24
 
 ### Fixed
